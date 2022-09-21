@@ -10,6 +10,7 @@
 #include "secbrows.h"
 #include "ivoc.h"
 #endif
+#include "nrniv_mf.h"
 #include "nrnoc2iv.h"
 #include "nrnmenu.h"
 #include "classreg.h"
@@ -26,7 +27,6 @@ extern int hoc_return_type_code;
 extern Symlist* hoc_built_in_symlist;
 extern Symbol** pointsym;
 extern double* point_process_pointer(Point_process*, Symbol*, int);
-extern "C" Point_process* ob2pntproc(Object*);
 extern ReceiveFunc* pnt_receive;
 extern int nrn_has_net_event_cnt_;
 extern int* nrn_has_net_event_;
@@ -251,7 +251,7 @@ static void pnodemenu(Prop* p1, double x, int type, const char* path, MechSelect
         return;
     }
     pnodemenu(p1->next, x, type, path, ms); /*print in insert order*/
-    if (memb_func[p1->type].is_point) {
+    if (memb_func[p1->_type].is_point) {
         return;
     } else {
         mech_menu(p1, x, type, path, ms);
@@ -281,7 +281,7 @@ static void mech_menu(Prop* p1, double x, int type, const char* path, MechSelect
     char buf[200];
     bool deflt;
 
-    if (ms && !ms->is_selected(p1->type)) {
+    if (ms && !ms->is_selected(p1->_type)) {
         return;
     }
     if (type == nrnocCONST) {
@@ -289,7 +289,7 @@ static void mech_menu(Prop* p1, double x, int type, const char* path, MechSelect
     } else {
         deflt = false;
     }
-    sym = memb_func[p1->type].sym;
+    sym = memb_func[p1->_type].sym;
     if (sym->s_varn) {
         for (j = 0; j < sym->s_varn; j++) {
             vsym = sym->u.ppsym[j];
@@ -326,7 +326,7 @@ static void mech_menu(Prop* p1, double x, int type, const char* path, MechSelect
                             }
                         } else {
                             sprintf(buf, "%s(%g)", vsym->name, x);
-                            if (p1->type == MORPHOLOGY) {
+                            if (p1->_type == MORPHOLOGY) {
                                 Section* sec = chk_access();
                                 char buf2[200];
                                 sprintf(buf2, "%s.Ra += 0", secname(sec));
@@ -458,7 +458,7 @@ static void point_menu(Object* ob, int make_label) {
     } else if (make_label == -1) {  // i.e. do neither
         k = 0;
     }
-    psym = pointsym[pnt_map[pp->prop->type]];
+    psym = pointsym[pnt_map[pp->prop->_type]];
 
 #if 0
         switch (type) {
@@ -631,7 +631,7 @@ static double ms_name(void* v) {
 
 static double ms_save(void* v) {
 #if HAVE_IV
-    ostream* o = Oc::save_stream;
+    std::ostream* o = Oc::save_stream;
     if (o) {
         ((MechanismStandard*) v)->save(gargstr(1), o);
     }
@@ -655,10 +655,17 @@ static void ms_destruct(void* v) {
     Resource::unref((MechanismStandard*) v);
 }
 
-static Member_func ms_members[] = {"panel", ms_panel, "action", ms_action, "in",   ms_in,
-                                   "_in",   ms_in,    "out",    ms_out,    "set",  ms_set,
-                                   "get",   ms_get,   "count",  ms_count,  "name", ms_name,
-                                   "save",  ms_save,  0,        0};
+static Member_func ms_members[] = {{"panel", ms_panel},
+                                   {"action", ms_action},
+                                   {"in", ms_in},
+                                   {"_in", ms_in},
+                                   {"out", ms_out},
+                                   {"set", ms_set},
+                                   {"get", ms_get},
+                                   {"count", ms_count},
+                                   {"name", ms_name},
+                                   {"save", ms_save},
+                                   {0, 0}};
 
 void MechanismStandard_reg() {
     class2oc("MechanismStandard", ms_cons, ms_destruct, ms_members, NULL, NULL, NULL);
@@ -1094,33 +1101,22 @@ static void mt_destruct(void* v) {
     MechanismType* mt = (MechanismType*) v;
     mt->unref();
 }
-static Member_func mt_members[] = {"select",
-                                   mt_select,
-                                   "selected",
-                                   mt_selected,
-                                   "make",
-                                   mt_make,
-                                   "remove",
-                                   mt_remove,
-                                   "count",
-                                   mt_count,
-                                   "menu",
-                                   mt_menu,
-                                   "action",
-                                   mt_action,
-                                   "is_netcon_target",
-                                   mt_is_target,
-                                   "has_net_event",
-                                   mt_has_net_event,
-                                   "is_artificial",
-                                   mt_is_artificial,
-                                   "internal_type",
-                                   mt_internal_type,
-                                   0,
-                                   0};
-static Member_ret_obj_func mt_retobj_members[] =
-    {"pp_begin", mt_pp_begin, "pp_next", mt_pp_next, 0, 0};
-static Member_ret_str_func mt_retstr_func[] = {"code", mt_code, "file", mt_file, 0, 0};
+static Member_func mt_members[] = {{"select", mt_select},
+                                   {"selected", mt_selected},
+                                   {"make", mt_make},
+                                   {"remove", mt_remove},
+                                   {"count", mt_count},
+                                   {"menu", mt_menu},
+                                   {"action", mt_action},
+                                   {"is_netcon_target", mt_is_target},
+                                   {"has_net_event", mt_has_net_event},
+                                   {"is_artificial", mt_is_artificial},
+                                   {"internal_type", mt_internal_type},
+                                   {0, 0}};
+static Member_ret_obj_func mt_retobj_members[] = {{"pp_begin", mt_pp_begin},
+                                                  {"pp_next", mt_pp_next},
+                                                  {0, 0}};
+static Member_ret_str_func mt_retstr_func[] = {{"code", mt_code}, {"file", mt_file}, {0, 0}};
 void MechanismType_reg() {
     class2oc(
         "MechanismType", mt_cons, mt_destruct, mt_members, NULL, mt_retobj_members, mt_retstr_func);
@@ -1199,7 +1195,7 @@ Point_process* MechanismType::pp_next() {
     Point_process* pp = NULL;
     bool done = mti_->p_iter_ == 0;
     while (!done) {
-        if (mti_->p_iter_->type == mti_->type_[mti_->select_]) {
+        if (mti_->p_iter_->_type == mti_->type_[mti_->select_]) {
             pp = (Point_process*) mti_->p_iter_->dparam[1]._pvoid;
             done = true;
             // but if it does not belong to this section

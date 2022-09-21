@@ -9,6 +9,7 @@ greater cache efficiency
 #include <stdio.h>
 #include <stdlib.h>
 #include <InterViews/resource.h>
+#include "nrniv_mf.h"
 #include <nrnmpi.h>
 #include <nrnoc2iv.h>
 #include <membfunc.h>
@@ -19,7 +20,6 @@ greater cache efficiency
 extern void nrn_mk_prop_pools(int);
 extern void nrn_cache_prop_realloc();
 extern int nrn_is_ion(int);
-extern "C" void nrn_update_ion_pointer(Symbol* sion, Datum* dp, int id, int ip);
 void nrn_delete_prop_pool(int type);
 #if EXTRACELLULAR
 extern void nrn_extcell_update_param();
@@ -58,7 +58,7 @@ called, how many needed for this thread
 // note that the pool chain order is the same as the thread order
 // there are nthread of the following lists
 cnt // number of mechanisms in thread
-type i seq // i is the tml->ml->data[i], seq is the allocation order
+type i seq // i is the tml->ml->_data[i], seq is the allocation order
 // ie we want
 
 Note that the overall memory allocation sequence has to be identical
@@ -274,7 +274,7 @@ void nrn_mk_prop_pools(int n) {
     mk_prop_pools(n);
 }
 
-extern "C" double* nrn_prop_data_alloc(int type, int count, Prop* p) {
+double* nrn_prop_data_alloc(int type, int count, Prop* p) {
     if (!dblpools_[type]) {
         dblpools_[type] = new DoubleArrayPool(APSIZE, count);
     }
@@ -286,7 +286,7 @@ extern "C" double* nrn_prop_data_alloc(int type, int count, Prop* p) {
     return pd;
 }
 
-extern "C" Datum* nrn_prop_datum_alloc(int type, int count, Prop* p) {
+Datum* nrn_prop_datum_alloc(int type, int count, Prop* p) {
     int i;
     Datum* ppd;
     if (!datumpools_[type]) {
@@ -303,14 +303,14 @@ extern "C" Datum* nrn_prop_datum_alloc(int type, int count, Prop* p) {
     return ppd;
 }
 
-extern "C" void nrn_prop_data_free(int type, double* pd) {
+void nrn_prop_data_free(int type, double* pd) {
     // if (type > 1) printf("nrn_prop_data_free %d %s %p\n", type, memb_func[type].sym->name, pd);
     if (pd) {
         dblpools_[type]->hpfree(pd);
     }
 }
 
-extern "C" void nrn_prop_datum_free(int type, Datum* ppd) {
+void nrn_prop_datum_free(int type, Datum* ppd) {
     // if (type > 1) printf("nrn_prop_datum_free %d %s %p\n", type, memb_func[type].sym->name, ppd);
     if (ppd) {
         datumpools_[type]->hpfree(ppd);
@@ -365,9 +365,9 @@ int nrn_prop_is_cache_efficient() {
                     continue;
                 }
                 for (int j = 0; j < ml->nodecount; ++j) {
-                    if (p[i]->element(j) != ml->data[j]) {
+                    if (p[i]->element(j) != ml->_data[j]) {
                         // printf("thread %d mechanism %s instance %d  element %p data %p\n",
-                        // it, memb_func[i].sym->name, j, p[i]->element(j), (ml->data + j));
+                        // it, memb_func[i].sym->name, j, p[i]->element(j), (ml->_data + j));
                         r = 0;
                     }
                 }
@@ -461,17 +461,17 @@ static int in_place_data_realloc() {
                 newpool->grow(extra);
             }
             newpool->free_all();  // items in pool data order
-            // reset ml->data pointers to the new pool and copy the values
+            // reset ml->_data pointers to the new pool and copy the values
             FOR_THREADS(nt) {
                 for (NrnThreadMembList* tml = nt->tml; tml; tml = tml->next)
                     if (i == tml->index) {
                         Memb_list* ml = tml->ml;
                         for (int j = 0; j < ml->nodecount; ++j) {
-                            double* data = ml->data[j];
+                            double* data = ml->_data[j];
                             int ntget = newpool->ntget();
-                            ml->data[j] = newpool->alloc();
+                            ml->_data[j] = newpool->alloc();
                             for (int k = 0; k < newpool->d2(); ++k) {
-                                ml->data[j][k] = data[k];
+                                ml->_data[j][k] = data[k];
                             }
                             // store in old location enough info
                             // to construct a pointer to the new location
@@ -554,12 +554,12 @@ static int in_place_data_realloc() {
         for (int i = 0; i < nt->end; ++i) {
             Node* nd = nt->_v_node[i];
             for (Prop* p = nd->prop; p; p = p->next) {
-                if (memb_func[p->type].current || memb_func[p->type].state ||
-                    memb_func[p->type].initialize) {
-                    Memb_list* ml = mlmap[p->type];
+                if (memb_func[p->_type].current || memb_func[p->_type].state ||
+                    memb_func[p->_type].initialize) {
+                    Memb_list* ml = mlmap[p->_type];
                     assert(ml->nodelist[ml->nodecount] == nd);
-                    if (!memb_func[p->type].hoc_mech) {
-                        p->param = ml->data[ml->nodecount];
+                    if (!memb_func[p->_type].hoc_mech) {
+                        p->param = ml->_data[ml->nodecount];
                     }
                     ++ml->nodecount;
                 }
@@ -583,7 +583,7 @@ static int in_place_data_realloc() {
     return status;
 }
 
-extern "C" void nrn_update_ion_pointer(Symbol* sion, Datum* dp, int id, int ip) {
+void nrn_update_ion_pointer(Symbol* sion, Datum* dp, int id, int ip) {
     int iontype = sion->subtype;
     DoubleArrayPool* np = dblpools_[iontype];
     DoubleArrayPool* op = oldpools_[iontype];
@@ -666,14 +666,14 @@ void nrn_cache_prop_realloc() {
         for (i = 0; i < nt->end; ++i) {
             Node* nd = nt->_v_node[i];
             for (Prop* p = nd->prop; p; p = p->next) {
-                if (memb_func[p->type].current || memb_func[p->type].state ||
-                    memb_func[p->type].initialize) {
-                    Memb_list* ml = mlmap[p->type];
+                if (memb_func[p->_type].current || memb_func[p->_type].state ||
+                    memb_func[p->_type].initialize) {
+                    Memb_list* ml = mlmap[p->_type];
                     if (!ml || nd != ml->nodelist[ml->nodecount]) {
                         abort();
                     }
                     assert(ml && nd == ml->nodelist[ml->nodecount]);
-                    nrn_assert(fprintf(f, "%d %d %ld\n", p->type, ml->nodecount++, p->_alloc_seq) >
+                    nrn_assert(fprintf(f, "%d %d %ld\n", p->_type, ml->nodecount++, p->_alloc_seq) >
                                0);
                     ++cnt2;
                 }

@@ -34,22 +34,18 @@ static const char* mechanism[] = {
     "vext[N]",
     0,
 };
-static HocParmLimits limits[] = {"xraxial", 1e-9, 1e15, "xg", 0., 1e15, "xc", 0., 1e15, 0, 0., 0.};
+static HocParmLimits limits[] = {{"xraxial", {1e-9, 1e15}},
+                                 {"xg", {0., 1e15}},
+                                 {"xc", {0., 1e15}},
+                                 {nullptr, {0., 0.}}};
 
-static HocParmUnits units[] = {"xraxial",
-                               "MOhm/cm",
-                               "xg",
-                               "S/cm2",
-                               "xc",
-                               "uF/cm2",
-                               "e_extracellular",
-                               "mV",
-                               "vext",
-                               "mV",
-                               "i_membrane",
-                               "mA/cm2",
-                               0,
-                               0};
+static HocParmUnits units[] = {{"xraxial", "MOhm/cm"},
+                               {"xg", "S/cm2"},
+                               {"xc", "uF/cm2"},
+                               {"e_extracellular", "mV"},
+                               {"vext", "mV"},
+                               {"i_membrane", "mA/cm2"},
+                               {0, 0}};
 
 static void extcell_alloc(Prop*);
 static void extcell_init(NrnThread* nt, Memb_list* ml, int type);
@@ -122,7 +118,7 @@ void nrn_update_2d(NrnThread* nt) {
 
 #if I_MEMBRANE
     for (i = 0; i < cnt; ++i) {
-        pd = ml->data[i];
+        pd = ml->_data[i];
         nd = ndlist[i];
         NODERHS(nd) -= *nd->extnode->_rhs[0];
         i_membrane = sav_g * (NODERHS(nd)) + sav_rhs;
@@ -193,7 +189,7 @@ static void extcell_alloc(Prop* p) {
 static void extcell_init(NrnThread* nt, Memb_list* ml, int type) {
     int ndcount = ml->nodecount;
     Node** ndlist = ml->nodelist;
-    double** data = ml->data;
+    double** data = ml->_data;
     int i, j;
     double* pd;
     if ((cvode_active_ > 0) && (nrn_use_daspk_ == 0)) {
@@ -318,12 +314,12 @@ void extcell_node_create(Node* nd) {
         }
         nde->param = (double*) 0;
         for (p = nd->prop; p; p = p->next) {
-            if (p->type == EXTRACELL) {
+            if (p->_type == EXTRACELL) {
                 nde->param = p->param;
                 break;
             }
         }
-        assert(p && p->type == EXTRACELL);
+        assert(p && p->_type == EXTRACELL);
     }
 }
 
@@ -338,7 +334,7 @@ void nrn_extcell_update_param(void) {
             for (i = 0; i < cnt; ++i) {
                 Node* nd = ndlist[i];
                 assert(nd->extnode);
-                nd->extnode->param = ml->data[i];
+                nd->extnode->param = ml->_data[i];
             }
         }
     }
@@ -379,7 +375,7 @@ void nrn_rhs_ext(NrnThread* _nt) {
         nde = nd->extnode;
         *nde->_rhs[0] -= NODERHS(nd);
 #if I_MEMBRANE
-        pd = ml->data[i];
+        pd = ml->_data[i];
         sav_rhs = *nde->_rhs[0];
         /* and for daspk this is the ionic current which can be
            combined later with i_cap before return from solve. */
@@ -468,7 +464,7 @@ void nrn_setup_ext(NrnThread* _nt) {
         *nde->_x12[0] -= d;
         *nde->_x21[0] -= d;
 #if I_MEMBRANE
-        pd = ml->data[i];
+        pd = ml->_data[i];
         sav_g = d;
 #endif
     }

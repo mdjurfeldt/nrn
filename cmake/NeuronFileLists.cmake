@@ -32,7 +32,6 @@ set(HEADER_FILES_TO_INSTALL
     nrncvode.h
     nrnisaac.h
     nrniv_mf.h
-    nrnjava.h
     nrnoc_ml.h
     nrnmpi.h
     nrnmpidec.h
@@ -44,6 +43,7 @@ set(HEADER_FILES_TO_INSTALL
     ocfunc.h
     ocmisc.h
     options.h
+    parse_with_deps.hpp
     scoplib.h
     section.h
     spconfig.h
@@ -535,7 +535,7 @@ set(NMODL_FILES_LIST
     units.cpp
     version.cpp)
 
-set(IVOS_FILES_LIST listimpl.cpp math.cpp string.cpp observe.cpp regexp.cpp resource.cpp)
+set(IVOS_FILES_LIST listimpl.cpp string.cpp observe.cpp regexp.cpp resource.cpp)
 
 set(MPI_DYNAMIC_INCLUDE nrnmpi_dynam.h nrnmpi_dynam_cinc nrnmpi_dynam_wrappers.inc)
 

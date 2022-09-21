@@ -103,6 +103,9 @@ build_wheel_linux() {
         CMAKE_DEFS="${CMAKE_DEFS},CMAKE_CUDA_ARCHITECTURES=60;70;80,CMAKE_C_FLAGS=-tp=haswell,CMAKE_CXX_FLAGS=-tp=haswell"
     fi
 
+    # Workaround for https://github.com/pypa/manylinux/issues/1309
+    git config --global --add safe.directory "*"
+
     python setup.py build_ext --cmake-prefix="/nrnwheel/ncurses;/nrnwheel/readline" --cmake-defs="$CMAKE_DEFS" $setup_args bdist_wheel
 
     # For CI runs we skip wheelhouse repairs
@@ -226,7 +229,7 @@ case "$1" in
         MPI_INCLUDE_HEADERS="${BREW_PREFIX}/opt/openmpi/include;${BREW_PREFIX}/opt/mpich/include"
         build_wheel_osx $(which python3) "$coreneuron" "$MPI_INCLUDE_HEADERS"
     else
-        MPI_INCLUDE_HEADERS="/usr/lib/x86_64-linux-gnu/openmpi/include;/usr/include/mpich"
+        MPI_INCLUDE_HEADERS="/usr/lib/x86_64-linux-gnu/openmpi/include;/usr/include/x86_64-linux-gnu/mpich"
         build_wheel_linux $(which python3) "$coreneuron" "$MPI_INCLUDE_HEADERS"
     fi
     ls wheelhouse/

@@ -9,8 +9,8 @@ extern void (*nrn_multisplit_setup_)();
 
 extern int hoc_return_type_code;
 
-#include <math.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 #include "classreg.h"
 #include "nrnoc2iv.h"
 #include "datapath.h"
@@ -18,13 +18,14 @@ extern int hoc_return_type_code;
 #include "netcvode.h"
 #include "membfunc.h"
 #include "nrndaspk.h"
+#include "nrniv_mf.h"
 #include "tqueue.h"
 #include "mymath.h"
 #include "htlist.h"
 #include <OS/list.h>
 #include <nrnmutdec.h>
 
-#if USE_PTHREAD
+#if NRN_ENABLE_THREADS
 static MUTDEC
 #endif
 
@@ -58,21 +59,17 @@ static MUTDEC
 extern double dt, t;
 #define nt_dt nrn_threads->_dt
 #define nt_t  nrn_threads->_t
-extern int diam_changed;
 extern int secondorder;
 extern int linmod_extra_eqn_count();
 extern int nrn_modeltype();
 extern int nrn_use_selfqueue_;
 extern int use_cachevec;
 extern void nrn_cachevec(int);
-extern "C" Point_process* ob2pntproc(Object*);
 extern void (*nrnthread_v_transfer_)(NrnThread*);
 extern void (*nrnmpi_v_transfer_)();
 
 extern NetCvode* net_cvode_instance;
 extern short* nrn_is_artificial_;
-extern "C" int structure_change_cnt;
-extern "C" int diam_change_cnt;
 #if USENCS
 extern void nrn2ncs_netcons();
 #endif  // USENCS
@@ -434,7 +431,7 @@ static double tstop_event(void* v) {
         if (ifarg(3)) {
             ppobj = *hoc_objgetarg(3);
             if (!ppobj || ppobj->ctemplate->is_point_ <= 0 ||
-                nrn_is_artificial_[ob2pntproc(ppobj)->prop->type]) {
+                nrn_is_artificial_[ob2pntproc(ppobj)->prop->_type]) {
                 hoc_execerror(hoc_object_name(ppobj), "is not a POINT_PROCESS");
             }
             reinit = int(chkarg(4, 0, 1));
@@ -951,7 +948,7 @@ void Cvode::maxstate(bool b, NrnThread* nt) {
     double* y = n_vector_data(y_, nt->id);
     double* m = n_vector_data(maxstate_, nt->id);
     for (i = 0; i < z.nvsize_; ++i) {
-        x = Math::abs(y[i]);
+        x = std::abs(y[i]);
         if (m[i] < x) {
             m[i] = x;
         }
@@ -960,7 +957,7 @@ void Cvode::maxstate(bool b, NrnThread* nt) {
         y = n_vector_data(acorvec(), nt->id);
         m = n_vector_data(maxacor_, nt->id);
         for (i = 0; i < z.nvsize_; ++i) {
-            x = Math::abs(y[i]);
+            x = std::abs(y[i]);
             if (m[i] < x) {
                 m[i] = x;
             }

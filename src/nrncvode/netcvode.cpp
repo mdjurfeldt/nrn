@@ -8,7 +8,6 @@
 #include <errno.h>
 #include <time.h>
 #include <InterViews/resource.h>
-#include <OS/math.h>
 #include <InterViews/regexp.h>
 #include "classreg.h"
 #include "nrnoc2iv.h"
@@ -66,10 +65,6 @@ typedef void (*ReceiveFunc)(Point_process*, double*, double);
 #include "membfunc.h"
 extern void single_event_run();
 extern void setup_topology(), v_setup_vectors();
-extern "C" int structure_change_cnt;
-extern int v_structure_change;
-extern int tree_changed, nrn_matrix_cnt_;
-extern int diam_changed;
 extern int nrn_errno_check(int);
 extern void nrn_ba(NrnThread*, int);
 extern NetCvode* net_cvode_instance;
@@ -84,27 +79,14 @@ extern Object* nrn_sec2cell(Section*);
 extern int nrn_sec2cell_equals(Section*, Object*);
 extern ReceiveFunc* pnt_receive;
 extern ReceiveFunc* pnt_receive_init;
-extern short* pnt_receive_size;
 extern short* nrn_is_artificial_;  // should be bool but not using that type in c
 extern short* nrn_artcell_qindex_;
-extern "C" void net_move(void**, Point_process*, double);
-extern "C" void artcell_net_move(void**, Point_process*, double);
 int nrn_use_selfqueue_;
 void nrn_pending_selfqueue(double tt, NrnThread*);
 static void all_pending_selfqueue(double tt);
 static void* pending_selfqueue(NrnThread*);
-extern "C" void net_event(Point_process*, double);
-extern "C" void _nrn_watch_activate(Datum*,
-                                    double (*)(Point_process*),
-                                    int,
-                                    Point_process*,
-                                    int,
-                                    double);
-extern "C" void _nrn_free_watch(Datum*, int, int);
 extern int hoc_araypt(Symbol*, int);
 extern int hoc_stacktype();
-extern "C" Point_process* ob2pntproc(Object*);
-extern "C" Point_process* ob2pntproc_0(Object*);
 void nrn_use_daspk(int);
 extern int nrn_use_daspk_;
 int linmod_extra_eqn_count();
@@ -145,7 +127,6 @@ extern int hoc_return_type_code;
 extern int nrn_fornetcon_cnt_;
 extern int* nrn_fornetcon_index_;
 extern int* nrn_fornetcon_type_;
-void _nrn_free_fornetcon(void**);
 
 // for use in mod files
 double nrn_netcon_get_delay(NetCon* nc) {
@@ -685,7 +666,7 @@ static double nc_setpost(void* v) {
     }
     int cnt = 1;
     if (tar) {
-        cnt = pnt_receive_size[tar->prop->type];
+        cnt = pnt_receive_size[tar->prop->_type];
         d->target_ = tar;
 #if DISCRETE_EVENT_OBSERVER
         ObjObservable::Attach(otar, d);
@@ -731,11 +712,13 @@ static double nc_event(void* v) {
     }
     d->chktar();
     NrnThread* nt = PP2NT(d->target_);
-    assert(nt && nt >= nrn_threads && nt < (nrn_threads + nrn_nthread));
+    const auto nrn_thread_not_initialized_for_nc_target = nt && nt >= nrn_threads &&
+                                                          nt < (nrn_threads + nrn_nthread);
+    nrn_assert(nrn_thread_not_initialized_for_nc_target);
     if (ifarg(2)) {
         double flag = *getarg(2);
         Point_process* pnt = d->target_;
-        int type = pnt->prop->type;
+        int type = pnt->prop->_type;
         if (!nrn_is_artificial_[type]) {
             hoc_execerror("Can only send fake self-events to ARTIFICIAL_CELLs", 0);
         }
@@ -1508,7 +1491,7 @@ void CvodeThreadData::delete_memb_list(CvMembList* cmlist) {
         if (memb_func[cml->index].hoc_mech) {
             delete[] ml->prop;
         } else {
-            delete[] ml->data;
+            delete[] ml->_data;
             delete[] ml->pdata;
         }
         delete cml;
@@ -1674,7 +1657,7 @@ bool NetCvode::init_global() {
                     if (mf->hoc_mech) {
                         cml->ml->prop = ml->prop;
                     } else {
-                        cml->ml->data = ml->data;
+                        cml->ml->_data = ml->_data;
                         cml->ml->pdata = ml->pdata;
                     }
                     cml->ml->_thread = ml->_thread;
@@ -1823,7 +1806,7 @@ bool NetCvode::init_global() {
                     if (memb_func[cml->index].hoc_mech) {
                         ml->prop = new Prop*[ml->nodecount];
                     } else {
-                        ml->data = new double*[ml->nodecount];
+                        ml->_data = new double*[ml->nodecount];
                         ml->pdata = new Datum*[ml->nodecount];
                     }
                     ml->nodecount = 0;
@@ -1853,7 +1836,7 @@ bool NetCvode::init_global() {
                         if (mf->hoc_mech) {
                             cml->ml->prop[cml->ml->nodecount] = ml->prop[j];
                         } else {
-                            cml->ml->data[cml->ml->nodecount] = ml->data[j];
+                            cml->ml->_data[cml->ml->nodecount] = ml->_data[j];
                             cml->ml->pdata[cml->ml->nodecount] = ml->pdata[j];
                         }
                         cml->ml->_thread = ml->_thread;
@@ -2327,7 +2310,7 @@ int Cvode::handle_step(NetCvode* ns, double te) {
     return err;
 }
 
-extern "C" void net_move(void** v, Point_process* pnt, double tt) {
+void net_move(void** v, Point_process* pnt, double tt) {
     if (!(*v)) {
         hoc_execerror("No event with flag=1 for net_move in ", hoc_object_name(pnt->ob));
     }
@@ -2344,7 +2327,7 @@ extern "C" void net_move(void** v, Point_process* pnt, double tt) {
     net_cvode_instance->move_event(q, tt, PP2NT(pnt));
 }
 
-extern "C" void artcell_net_move(void** v, Point_process* pnt, double tt) {
+void artcell_net_move(void** v, Point_process* pnt, double tt) {
     if (nrn_use_selfqueue_) {
         if (!(*v)) {
             hoc_execerror("No event with flag=1 for net_move in ", hoc_object_name(pnt->ob));
@@ -2484,7 +2467,7 @@ void nrn_net_send(void** v, double* weight, void* pnt, double td, double flag) {
     nrn_net_send(v, weight, static_cast<Point_process*>(pnt), td, flag);
 }
 
-extern "C" void net_event(Point_process* pnt, double time) {
+void net_event(Point_process* pnt, double time) {
     STATISTICS(net_event_cnt_);
     PreSyn* ps = (PreSyn*) pnt->presyn_;
     if (ps) {
@@ -2506,12 +2489,12 @@ extern "C" void net_event(Point_process* pnt, double time) {
     }
 }
 
-extern "C" void _nrn_watch_activate(Datum* d,
-                                    double (*c)(Point_process*),
-                                    int i,
-                                    Point_process* pnt,
-                                    int r,
-                                    double flag) {
+void _nrn_watch_activate(Datum* d,
+                         double (*c)(Point_process*),
+                         int i,
+                         Point_process* pnt,
+                         int r,
+                         double flag) {
     if (!d[i]._pvoid || !d[0]._pvoid) {
         // When c is NULL, i.e. called from CoreNEURON,
         // we never get here because we made sure
@@ -2593,11 +2576,11 @@ Here are some more notes about WatchCondition, HTList, HTListList, and
  *  because the allocated WatchCondition has double (*c_)(Point_process)
  *  and flag_ filled in.
  **/
-extern "C" void _nrn_watch_allocate(Datum* d,
-                                    double (*c)(Point_process*),
-                                    int i,
-                                    Point_process* pnt,
-                                    double flag) {
+void _nrn_watch_allocate(Datum* d,
+                         double (*c)(Point_process*),
+                         int i,
+                         Point_process* pnt,
+                         double flag) {
     if (!d->_pvoid) {
         d->_pvoid = (void*) new WatchList();
     }
@@ -2619,7 +2602,7 @@ extern "C" void _nrn_watch_allocate(Datum* d,
  *  WatchCondition be deactivated prior to mirroring the activation
  *  that exists on the corenrn side.
  **/
-extern "C" void nrn_watch_clear() {
+void nrn_watch_clear() {
     assert(net_cvode_instance->wl_list_.size() == (size_t) nrn_nthread);
     for (auto& htlists_of_thread: net_cvode_instance->wl_list_) {
         for (HTList* wl: htlists_of_thread) {
@@ -2632,7 +2615,7 @@ extern "C" void nrn_watch_clear() {
 }
 
 /** Called by Point_process destructor in translated mod file **/
-extern "C" void _nrn_free_watch(Datum* d, int offset, int n) {
+void _nrn_free_watch(Datum* d, int offset, int n) {
     int i;
     int nn = offset + n;
     if (d[offset]._pvoid) {
@@ -2839,11 +2822,11 @@ static PPArgs* ppargs;
 
 static void point_receive_job(NrnThread* nt) {
 	PPArgs* p = ppargs + nt->id;
-	(*pnt_receive[p->type])(p->pp, p->w, p->f);
+	(*pnt_receive[p->_type])(p->pp, p->w, p->f);
 }
 
 void NetCvode::point_receive(int type, Point_process* pp, double* w, double f) {
-	// this is the master thread. need to execute the pthread associated
+	// this is the master thread. need to execute the thread associated
 	// with the pp.
 	int id = PP2NT(pp)->id;
 	if (id == 0) { // execute on this, the master thread
@@ -2851,7 +2834,7 @@ void NetCvode::point_receive(int type, Point_process* pp, double* w, double f) {
 	}else{
 		// marshall the args
 		PPArgs* p = ppargs + id;
-		p->type = type;
+		p->_type = type;
 		p->pp = pp;
 		p->w = w;
 		p->f = f;
@@ -3021,7 +3004,7 @@ void NetCvode::init_events() {
         Object* obj = OBJ(q);
         NetCon* d = (NetCon*) obj->u.this_pointer;
         if (d->target_) {
-            int type = d->target_->prop->type;
+            int type = d->target_->prop->_type;
             if (pnt_receive_init[type]) {
                 (*pnt_receive_init[type])(d->target_, d->weight_, 0);
             } else {
@@ -3188,7 +3171,7 @@ void NetCon::send(double tt, NetCvode* ns, NrnThread* nt) {
 
 void NetCon::deliver(double tt, NetCvode* ns, NrnThread* nt) {
     assert(target_);
-    int type = target_->prop->type;
+    int type = target_->prop->_type;
     std::string ss("net-receive-");
     ss += memb_func[type].sym->name;
     nrn::Instrumentor::phase p_get_pnt_receive(ss.c_str());
@@ -3231,7 +3214,7 @@ NrnThread* NetCon::thread() {
 
 void NetCon::pgvts_deliver(double tt, NetCvode* ns) {
     assert(target_);
-    int type = target_->prop->type;
+    int type = target_->prop->_type;
     STATISTICS(netcon_deliver_);
     POINT_RECEIVE(type, target_, weight_, 0);
     if (errno) {
@@ -3500,7 +3483,7 @@ void SelfEvent::savestate_write(FILE* f) {
             "%s %d %d %d %d %g\n",
             target_->ob->ctemplate->sym->name,
             target_->ob->index,
-            target_->prop->type,
+            target_->prop->_type,
             ncindex,
             moff,
             flag_);
@@ -3508,7 +3491,7 @@ void SelfEvent::savestate_write(FILE* f) {
 
 void SelfEvent::deliver(double tt, NetCvode* ns, NrnThread* nt) {
     Cvode* cv = (Cvode*) target_->nvi_;
-    int type = target_->prop->type;
+    int type = target_->prop->_type;
     assert(nt == PP2NT(target_));
     if (nrn_use_selfqueue_ && nrn_is_artificial_[type]) {  // handle possible earlier flag=1 self
                                                            // event
@@ -3544,9 +3527,9 @@ void SelfEvent::pgvts_deliver(double tt, NetCvode* ns) {
 }
 void SelfEvent::call_net_receive(NetCvode* ns) {
     STATISTICS(selfevent_deliver_);
-    POINT_RECEIVE(target_->prop->type, target_, weight_, flag_);
+    POINT_RECEIVE(target_->prop->_type, target_, weight_, flag_);
     if (errno) {
-        if (nrn_errno_check(target_->prop->type)) {
+        if (nrn_errno_check(target_->prop->_type)) {
             hoc_warning("errno set during SelfEvent deliver to NET_RECEIVE", (char*) 0);
         }
     }
@@ -4180,9 +4163,9 @@ void NetCvode::fornetcon_prepare() {
             const NetConPList& dil = ps->dil_;
             for (const auto& d1: dil) {
                 Point_process* pnt = d1->target_;
-                if (pnt && t2i[pnt->prop->type] > -1) {
+                if (pnt && t2i[pnt->prop->_type] > -1) {
                     ForNetConsInfo* fnc =
-                        (ForNetConsInfo*) pnt->prop->dparam[t2i[pnt->prop->type]]._pvoid;
+                        (ForNetConsInfo*) pnt->prop->dparam[t2i[pnt->prop->_type]]._pvoid;
                     assert(fnc);
                     fnc->size += 1;
                 }
@@ -4224,9 +4207,9 @@ void NetCvode::fornetcon_prepare() {
             const NetConPList& dil = ps->dil_;
             for (const auto& d1: dil) {
                 Point_process* pnt = d1->target_;
-                if (pnt && t2i[pnt->prop->type] > -1) {
+                if (pnt && t2i[pnt->prop->_type] > -1) {
                     ForNetConsInfo* fnc =
-                        (ForNetConsInfo*) pnt->prop->dparam[t2i[pnt->prop->type]]._pvoid;
+                        (ForNetConsInfo*) pnt->prop->dparam[t2i[pnt->prop->_type]]._pvoid;
                     fnc->argslist[fnc->size] = d1->weight_;
                     fnc->size += 1;
                 }
@@ -4242,7 +4225,7 @@ int _nrn_netcon_args(void* v, double*** argslist) {
     return fnc->size;
 }
 
-extern "C" void _nrn_free_fornetcon(void** v) {
+void _nrn_free_fornetcon(void** v) {
     ForNetConsInfo* fnc = (ForNetConsInfo*) (*v);
     if (fnc) {
         if (fnc->argslist) {
@@ -4707,7 +4690,7 @@ NetCon* NetCvode::install_deliver(double* dsrc,
         if (hoc_table_lookup("x", osrc->ctemplate->symtable)) {
             Point_process* pp = ob2pntproc(osrc);
             assert(pp && pp->prop);
-            if (!pnt_receive[pp->prop->type]) {  // only if no NET_RECEIVE block
+            if (!pnt_receive[pp->prop->_type]) {  // only if no NET_RECEIVE block
                 sprintf(buf, "%s.x", hoc_object_name(osrc));
                 psrc = hoc_val_pointer(buf);
             }
@@ -4853,10 +4836,10 @@ NetCon::NetCon(PreSyn* src, Object* target) {
 #if DISCRETE_EVENT_OBSERVER
     ObjObservable::Attach(target, this);
 #endif
-    if (!pnt_receive[target_->prop->type]) {
+    if (!pnt_receive[target_->prop->_type]) {
         hoc_execerror("No NET_RECEIVE in target PointProcess:", hoc_object_name(target));
     }
-    cnt_ = pnt_receive_size[target_->prop->type];
+    cnt_ = pnt_receive_size[target_->prop->_type];
     weight_ = nil;
     if (cnt_) {
         weight_ = new double[cnt_];
@@ -5523,7 +5506,7 @@ void WatchCondition::deliver(double tt, NetCvode* ns, NrnThread* nt) {
         STATISTICS(deliver_qthresh_);
     }
     Cvode* cv = (Cvode*) pnt_->nvi_;
-    int type = pnt_->prop->type;
+    int type = pnt_->prop->_type;
     if (cvode_active_ && cv) {
         ns->local_retreat(tt, cv);
         cv->set_init_flag();
@@ -5623,7 +5606,7 @@ void WatchCondition::pgvts_deliver(double tt, NetCvode* ns) {
         qthresh_ = nil;
         STATISTICS(deliver_qthresh_);
     }
-    int type = pnt_->prop->type;
+    int type = pnt_->prop->_type;
     STATISTICS(watch_deliver_);
     POINT_RECEIVE(type, pnt_, nil, nrflag_);
     if (errno) {
@@ -5639,7 +5622,7 @@ void STECondition::pgvts_deliver(double tt, NetCvode* ns) {
         qthresh_ = nil;
         STATISTICS(deliver_qthresh_);
     }
-    int type = pnt_->prop->type;
+    int type = pnt_->prop->_type;
     STATISTICS(watch_deliver_);
     stet_->event();
     if (errno) {
@@ -6473,7 +6456,7 @@ void VecRecordDiscrete::frecord_init(TQItem* q) {
 
 void VecRecordDiscrete::deliver(double tt, NetCvode* nc) {
     y_->push_back(*pd_);
-    assert(Math::equal(t_->elem(y_->size() - 1), tt, 1e-8));
+    assert(MyMath::eq(t_->elem(y_->size() - 1), tt, 1e-8));
     if (y_->size() < t_->size()) {
         e_->send(t_->elem(y_->size()), nc, nrn_threads);
     }

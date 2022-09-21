@@ -206,7 +206,6 @@ extern Section** secorder;
 extern ReceiveFunc* pnt_receive;
 extern NetCvode* net_cvode_instance;
 extern TQueue* net_cvode_instance_event_queue(NrnThread*);
-extern "C" void clear_event_queue();
 extern cTemplate** nrn_pnt_template_;
 extern hoc_Item* net_cvode_instance_psl();
 extern PlayRecList* net_cvode_instance_prl();
@@ -268,7 +267,6 @@ static void nrnmpi_dbl_allgatherv(double* s, double* r, int* n, int* dspl) {
 extern bool use_bgpdma_;
 #endif
 
-extern "C" Point_process* ob2pntproc(Object*);
 extern void nrn_play_init();
 extern Symlist* hoc_built_in_symlist;
 
@@ -945,24 +943,22 @@ static double vector_play_init(void* v) {
     return 0.;
 }
 
-static Member_func members[] = {
-    // text test
-    {"save", save},
-    {"restore", restore},
-    {"save_test", save_test},
-    {"restore_test", restore_test},
-    // binary test
-    {"save_test_bin", save_test_bin},
-    {"restore_test_bin", restore_test_bin},
-    // binary save/restore interface to interpreter
-    {"save_request", save_request},
-    {"save_gid", save_gid},
-    {"restore_gid", restore_gid},
-    // indicate which point processes are to be ignored
-    {"ignore", ppignore},
-    // allow Vector.play to work
-    {"vector_play_init", vector_play_init},
-    {0, 0}};
+static Member_func members[] = {{"save", save},
+                                {"restore", restore},
+                                {"save_test", save_test},
+                                {"restore_test", restore_test},
+                                // binary test
+                                {"save_test_bin", save_test_bin},
+                                {"restore_test_bin", restore_test_bin},
+                                // binary save/restore interface to interpreter
+                                {"save_request", save_request},
+                                {"save_gid", save_gid},
+                                {"restore_gid", restore_gid},
+                                // indicate which point processes are to be ignored
+                                {"ignore", ppignore},
+                                // allow Vector.play to work
+                                {"vector_play_init", vector_play_init},
+                                {0, 0}};
 
 void BBSaveState_reg() {
     class2oc("BBSaveState", cons, destruct, members, NULL, NULL, NULL);
@@ -1174,7 +1170,7 @@ static void tqcallback(const TQItem* tq, int i) {
             }
             if (sew->ncindex == -2) {  // ignore the self event
                 // printf("%d Ignoring a SelfEvent to %s\n", nrnmpi_myid,
-                // memb_func[pp->prop->type].sym->name);
+                // memb_func[pp->prop->_type].sym->name);
                 delete sew;
                 sew = 0;
             }
@@ -1937,8 +1933,8 @@ void BBSaveState::node(Node* nd) {
     // the section and marked IGNORE. So we need to count only the
     // non-ignored.
     for (i = 0, p = nd->prop; p; p = p->next) {
-        if (p->type > 3) {
-            if (memb_func[p->type].is_point) {
+        if (p->_type > 3) {
+            if (memb_func[p->_type].is_point) {
                 if (!ignored(p)) {
                     ++i;
                 }
@@ -1949,7 +1945,7 @@ void BBSaveState::node(Node* nd) {
     }
     f->i(i, 1);
     for (p = nd->prop; p; p = p->next) {
-        if (p->type > 3) {
+        if (p->_type > 3) {
             mech(p);
         }
     }
@@ -1973,7 +1969,7 @@ void BBSaveState::node01(Section* sec, Node* nd) {
     f->d(1, NODEV(nd));
     // count
     for (i = 0, p = nd->prop; p; p = p->next) {
-        if (memb_func[p->type].is_point) {
+        if (memb_func[p->_type].is_point) {
             Point_process* pp = (Point_process*) p->dparam[1]._pvoid;
             if (pp->sec == sec) {
                 if (!ignored(p)) {
@@ -1984,7 +1980,7 @@ void BBSaveState::node01(Section* sec, Node* nd) {
     }
     f->i(i, 1);
     for (p = nd->prop; p; p = p->next) {
-        if (memb_func[p->type].is_point) {
+        if (memb_func[p->_type].is_point) {
             Point_process* pp = (Point_process*) p->dparam[1]._pvoid;
             if (pp->sec == sec) {
                 mech(p);
@@ -1999,10 +1995,10 @@ void BBSaveState::node01(Section* sec, Node* nd) {
 
 void BBSaveState::mech(Prop* p) {
     if (debug) {
-        sprintf(dbuf, "Enter mech(prop type %d)", p->type);
+        sprintf(dbuf, "Enter mech(prop type %d)", p->_type);
         PDEBUG;
     }
-    int type = p->type;
+    int type = p->_type;
     if (memb_func[type].is_point && ignored(p)) {
         return;
     }
@@ -2010,18 +2006,18 @@ void BBSaveState::mech(Prop* p) {
     char buf[100];
     sprintf(buf, "//%s", memb_func[type].sym->name);
     f->s(buf, 1);
-    f->d(ssi[p->type].size, p->param + ssi[p->type].offset);
+    f->d(ssi[p->_type].size, p->param + ssi[p->_type].offset);
     Point_process* pp = 0;
-    if (memb_func[p->type].is_point) {
+    if (memb_func[p->_type].is_point) {
         pp = (Point_process*) p->dparam[1]._pvoid;
-        if (pnt_receive[p->type]) {
+        if (pnt_receive[p->_type]) {
             // associated NetCon and queue SelfEvent
             // if the NetCon has a unique non-gid source (art cell)
             // that source is save/restored as well.
             netrecv_pp(pp);
         }
     }
-    if (ssi[p->type].callback) {  // model author dependent info
+    if (ssi[p->_type].callback) {  // model author dependent info
         // the POINT_PROCESS or SUFFIX has a bbsavestate function
         sprintf(buf, "callback");
         f->s(buf, 1);
@@ -2031,11 +2027,11 @@ void BBSaveState::mech(Prop* p) {
 
         hoc_pushpx(&xdir);
         hoc_pushpx(xval);
-        if (memb_func[p->type].is_point) {
-            hoc_call_ob_proc(pp->ob, ssi[p->type].callback, narg);
+        if (memb_func[p->_type].is_point) {
+            hoc_call_ob_proc(pp->ob, ssi[p->_type].callback, narg);
             hoc_xpop();
         } else {
-            nrn_call_mech_func(ssi[p->type].callback, narg, p, p->type);
+            nrn_call_mech_func(ssi[p->_type].callback, narg, p, p->_type);
         }
         int sz = int(xdir);
         if (sz > 0) {
@@ -2046,19 +2042,19 @@ void BBSaveState::mech(Prop* p) {
             if (f->type() == BBSS_IO::IN) {  // restore
                 xdir = 1.;
                 f->d(sz, xval);
-                if (memb_func[p->type].is_point) {
-                    hoc_call_ob_proc(pp->ob, ssi[p->type].callback, narg);
+                if (memb_func[p->_type].is_point) {
+                    hoc_call_ob_proc(pp->ob, ssi[p->_type].callback, narg);
                     hoc_xpop();
                 } else {
-                    nrn_call_mech_func(ssi[p->type].callback, narg, p, p->type);
+                    nrn_call_mech_func(ssi[p->_type].callback, narg, p, p->_type);
                 }
             } else {
                 xdir = 0.;
-                if (memb_func[p->type].is_point) {
-                    hoc_call_ob_proc(pp->ob, ssi[p->type].callback, narg);
+                if (memb_func[p->_type].is_point) {
+                    hoc_call_ob_proc(pp->ob, ssi[p->_type].callback, narg);
                     hoc_xpop();
                 } else {
-                    nrn_call_mech_func(ssi[p->type].callback, narg, p, p->type);
+                    nrn_call_mech_func(ssi[p->_type].callback, narg, p, p->_type);
                 }
                 f->d(sz, xval);
             }
@@ -2066,14 +2062,14 @@ void BBSaveState::mech(Prop* p) {
         }
     }
     if (debug) {
-        sprintf(dbuf, "Leave mech(prop type %d)", p->type);
+        sprintf(dbuf, "Leave mech(prop type %d)", p->_type);
         PDEBUG;
     }
 }
 
 void BBSaveState::netrecv_pp(Point_process* pp) {
     if (debug) {
-        sprintf(dbuf, "Enter netrecv_pp(pp prop type %d)", pp->prop->type);
+        sprintf(dbuf, "Enter netrecv_pp(pp prop type %d)", pp->prop->_type);
         PDEBUG;
     }
     char buf[1000];
@@ -2211,7 +2207,7 @@ void BBSaveState::netrecv_pp(Point_process* pp) {
         }
     }
     if (debug) {
-        sprintf(dbuf, "Leave netrecv_pp(pp prop type %d)", pp->prop->type);
+        sprintf(dbuf, "Leave netrecv_pp(pp prop type %d)", pp->prop->_type);
         PDEBUG;
     }
 }

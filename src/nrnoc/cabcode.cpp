@@ -24,7 +24,6 @@ int diam_changed = 1; /* changing diameter, length set this flag
               The flag is set to 0 when node.a and node.b
               is set up */
 extern int nrn_shape_changed_;
-extern int v_structure_change;
 
 char* (*nrnpy_pysec_name_p_)(Section*);
 Object* (*nrnpy_pysec_cell_p_)(Section*);
@@ -96,7 +95,7 @@ void oc_restore_cabcode(int* a1, int* a2) {
     section_object_seen = *a2;
 }
 
-extern "C" void nrn_pushsec(Section* sec) {
+void nrn_pushsec(Section* sec) {
     isecstack++;
     if (isecstack >= NSECSTACK) {
         int i = NSECSTACK;
@@ -120,7 +119,7 @@ extern "C" void nrn_pushsec(Section* sec) {
     }
 }
 
-extern "C" void nrn_popsec(void) {
+void nrn_popsec(void) {
     if (isecstack > 0) {
         Section* sec = secstack[isecstack--];
         if (!sec) {
@@ -201,6 +200,13 @@ void add_section(void) /* symbol at pc+1, number of indices at pc+2 */
         hoc_freearay(sym);
     } else {
         assert(sym->type == UNDEF);
+        if (hoc_objectdata != hoc_top_level_data && hoc_thisobject) {
+            hoc_execerr_ext(
+                "First time declaration of Section %s in %s "
+                "must happen at command level (not in method)",
+                sym->name,
+                hoc_object_name(hoc_thisobject));
+        }
         sym->type = SECTION;
         hoc_install_object_data_index(sym);
     }
@@ -434,7 +440,7 @@ void nrn_chk_section(Symbol* s) {
     }
 }
 
-extern "C" Section* chk_access(void) {
+Section* chk_access() {
     Section* sec = secstack[isecstack];
     if (!sec || !sec->prop) {
         /* use any existing section as a default section */
@@ -932,14 +938,14 @@ void mech_uninsert1(Section* sec, Symbol* s) {
     n = sec->nnode;
     for (i = 0; i < n; ++i) {
         mnext = sec->pnode[i]->prop;
-        if (mnext && mnext->type == type) {
+        if (mnext && mnext->_type == type) {
             sec->pnode[i]->prop = mnext->next;
             single_prop_free(mnext);
             continue;
         }
         for (m = mnext; m; m = mnext) {
             mnext = m->next;
-            if (mnext && mnext->type == type) {
+            if (mnext && mnext->_type == type) {
                 m->next = mnext->next;
                 single_prop_free(mnext);
                 break;
@@ -1069,11 +1075,11 @@ static int range_vec_indx(Symbol* s) {
     return indx;
 }
 
-extern "C" Prop* nrn_mechanism(int type, Node* nd) /* returns property for mechanism at the node */
-{
+/* returns property for mechanism at the node */
+Prop* nrn_mechanism(int type, Node* nd) {
     Prop* m;
     for (m = nd->prop; m; m = m->next) {
-        if (m->type == type) {
+        if (m->_type == type) {
             break;
         }
     }
@@ -1930,7 +1936,7 @@ int segment_limits(double* pdx) {
 #undef PI
 #define PI 3.14159265358979323846
 
-extern "C" Node* node_exact(Section* sec, double x) {
+Node* node_exact(Section* sec, double x) {
     /* like node_index but give proper node when
         x is 0 or 1 as well as in between
     */
@@ -1990,7 +1996,7 @@ Node* node_ptr(Section* sec, double x, double* parea) {
     return nd;
 }
 
-extern "C" int nrn_get_mechtype(const char* mechname) {
+int nrn_get_mechtype(const char* mechname) {
     Symbol* s;
     s = hoc_lookup(mechname);
     assert(s);
@@ -2058,9 +2064,9 @@ double* dprop(Symbol* s, int indx, Section* sec, short inode) {
 #if EXTRACELLULAR
 /* this does not handle vext(0) and vext(1) properly at this time */
 #if I_MEMBRANE
-    if (m->type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 2) {
+    if (m->_type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 2) {
 #else
-    if (m->type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 1) {
+    if (m->_type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 1) {
 #endif
         return sec->pnode[inode]->extnode->v + indx;
     }
@@ -2093,9 +2099,9 @@ double* nrnpy_dprop(Symbol* s, int indx, Section* sec, short inode, int* err) {
 #if EXTRACELLULAR
 /* this does not handle vext(0) and vext(1) properly at this time */
 #if I_MEMBRANE
-    if (m->type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 2) {
+    if (m->_type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 2) {
 #else
-    if (m->type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 1) {
+    if (m->_type == EXTRACELL && s->u.rng.index == 3 * (nlayer) + 1) {
 #endif
         return sec->pnode[inode]->extnode->v + indx;
     }
@@ -2231,7 +2237,7 @@ int has_membrane(char* mechanism_name, Section* sec) {
         section sec */
     Prop* p;
     for (p = sec->pnode[0]->prop; p; p = p->next) {
-        if (strcmp(memb_func[p->type].sym->name, mechanism_name) == 0) {
+        if (strcmp(memb_func[p->_type].sym->name, mechanism_name) == 0) {
             return (1);
         }
     }

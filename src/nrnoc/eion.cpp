@@ -31,20 +31,15 @@ static const char* mechanism[] = {/*just a template*/
                                   0,
                                   0};
 static DoubScal scdoub[] = {/* just a template*/
-                            "ci0_na_ion",
-                            0,
-                            "co0_na_ion",
-                            0,
-                            0,
-                            0};
+                            {"ci0_na_ion", 0},
+                            {"co0_na_ion", 0},
+                            {0, 0}};
 
 static void ion_alloc(Prop*);
 
 static void ion_cur(NrnThread*, Memb_list*, int);
 
 static void ion_init(NrnThread*, Memb_list*, int);
-
-extern "C" double nrn_nernst(double, double, double), nrn_ghk(double, double, double, double);
 
 static int na_ion, k_ion, ca_ion; /* will get type for these special ions */
 
@@ -147,10 +142,6 @@ void ion_charge(void) {
     hoc_retpushx(global_charge(s->subtype));
 }
 
-extern "C" {
-void register_mech(const char**, Pvmp, Pvmi, Pvmi, Pvmi, Pvmi, int, int);
-
-
 void ion_reg(const char* name, double valence) {
     int i, mechtype;
     Symbol* s;
@@ -251,7 +242,6 @@ two USEION statements (%g and %g)\n",
         free(buf[i]);
     }
 }
-}  // extern "C"
 
 void nrn_verify_ion_charge_defined() {
     int i;
@@ -288,7 +278,7 @@ double nrn_nernst(double ci, double co, double z) {
     }
 }
 
-extern "C" void nrn_wrote_conc(Symbol* sym, double* pe, int it) {
+void nrn_wrote_conc(Symbol* sym, double* pe, int it) {
     if (it & 040) {
         pe[0] = nrn_nernst(pe[1], pe[2], nrn_ion_charge(sym));
     }
@@ -344,7 +334,7 @@ static double efun(double x) {
     }
 }
 
-extern "C" double nrn_ghk(double v, double ci, double co, double z) {
+double nrn_ghk(double v, double ci, double co, double z) {
     double eco, eci, temp;
     temp = z * v / ktf;
     eco = co * efun(temp);
@@ -402,7 +392,7 @@ double nrn_nernst_coef(int type) {
 /*
 It is generally an error for two models to WRITE the same concentration
 */
-extern "C" void nrn_check_conc_write(Prop* p_ok, Prop* pion, int i) {
+void nrn_check_conc_write(Prop* p_ok, Prop* pion, int i) {
     static long *chk_conc_, *ion_bit_, size_;
     Prop* p;
     int flag, j, k;
@@ -438,22 +428,22 @@ extern "C" void nrn_check_conc_write(Prop* p_ok, Prop* pion, int i) {
         }
     }
 
-    chk_conc_[2 * p_ok->type + i] |= ion_bit_[pion->type];
+    chk_conc_[2 * p_ok->_type + i] |= ion_bit_[pion->_type];
     if (pion->dparam[0].i & flag) {
         /* now comes the hard part. Is the possibility in fact actual.*/
         for (p = pion->next; p; p = p->next) {
             if (p == p_ok) {
                 continue;
             }
-            if (chk_conc_[2 * p->type + i] & ion_bit_[pion->type]) {
+            if (chk_conc_[2 * p->_type + i] & ion_bit_[pion->_type]) {
                 char buf[300];
                 sprintf(buf,
                         "%.*s%c is being written at the same location by %s and %s",
-                        (int) strlen(memb_func[pion->type].sym->name) - 4,
-                        memb_func[pion->type].sym->name,
+                        (int) strlen(memb_func[pion->_type].sym->name) - 4,
+                        memb_func[pion->_type].sym->name,
                         ((i == 1) ? 'i' : 'o'),
-                        memb_func[p_ok->type].sym->name,
-                        memb_func[p->type].sym->name);
+                        memb_func[p_ok->_type].sym->name,
+                        memb_func[p->_type].sym->name);
                 hoc_warning(buf, (char*) 0);
             }
         }
@@ -536,7 +526,7 @@ int nrn_vartype(Symbol* sym) {
 }
 
 /* the ion mechanism it flag  defines how _AMBIGUOUS is to be interpreted */
-extern "C" void nrn_promote(Prop* p, int conc, int rev) {
+void nrn_promote(Prop* p, int conc, int rev) {
     int oldconc, oldrev;
     int* it = &p->dparam[0].i;
     oldconc = (*it & 03);
@@ -569,7 +559,7 @@ extern "C" void nrn_promote(Prop* p, int conc, int rev) {
 static void ion_cur(NrnThread* nt, Memb_list* ml, int type) {
     int count = ml->nodecount;
     Node** vnode = ml->nodelist;
-    double** pd = ml->data;
+    double** pd = ml->_data;
     Datum** ppd = ml->pdata;
     int i;
 /*printf("ion_cur %s\n", memb_func[type].sym->name);*/
@@ -591,7 +581,7 @@ static void ion_cur(NrnThread* nt, Memb_list* ml, int type) {
 static void ion_init(NrnThread* nt, Memb_list* ml, int type) {
     int count = ml->nodecount;
     Node** vnode = ml->nodelist;
-    double** pd = ml->data;
+    double** pd = ml->_data;
     Datum** ppd = ml->pdata;
     int i;
 /*printf("ion_init %s\n", memb_func[type].sym->name);*/
@@ -618,20 +608,20 @@ static void ion_alloc(Prop* p) {
     double* pd[1];
     int i = 0;
 
-    pd[0] = nrn_prop_data_alloc(p->type, nparm, p);
+    pd[0] = nrn_prop_data_alloc(p->_type, nparm, p);
     p->param_size = nparm;
 
     cur = 0.;
     dcurdv = 0.;
-    if (p->type == na_ion) {
+    if (p->_type == na_ion) {
         erev = DEF_ena;
         conci = DEF_nai;
         conco = DEF_nao;
-    } else if (p->type == k_ion) {
+    } else if (p->_type == k_ion) {
         erev = DEF_ek;
         conci = DEF_ki;
         conco = DEF_ko;
-    } else if (p->type == ca_ion) {
+    } else if (p->_type == ca_ion) {
         erev = DEF_eca;
         conci = DEF_cai;
         conco = DEF_cao;
@@ -642,7 +632,7 @@ static void ion_alloc(Prop* p) {
     }
     p->param = pd[0];
 
-    p->dparam = nrn_prop_datum_alloc(p->type, 1, p);
+    p->dparam = nrn_prop_datum_alloc(p->_type, 1, p);
     p->dparam->i = 0;
 }
 
@@ -659,7 +649,7 @@ void second_order_cur(NrnThread* nt) {
                 ml = tml->ml;
                 i2 = ml->nodecount;
                 for (i = 0; i < i2; ++i) {
-                    ml->data[i][c] += ml->data[i][dc] * (NODERHS(ml->nodelist[i]));
+                    ml->_data[i][c] += ml->_data[i][dc] * (NODERHS(ml->nodelist[i]));
                 }
             }
     }

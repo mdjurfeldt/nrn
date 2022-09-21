@@ -68,8 +68,6 @@ extern void* nrn_multisplit_bksub(NrnThread*);
 extern void (*nrn_multisplit_setup_)();
 void (*nrn_allthread_handle)();
 
-extern int tree_changed;
-extern int diam_changed;
 extern int state_discon_allowed_;
 extern double hoc_epsilon;
 
@@ -153,10 +151,6 @@ void (*nrnmpi_v_transfer_)(); /* called by thread 0 */
 void (*nrnthread_v_transfer_)(NrnThread* nt);
 /* if at least one gap junction has a source voltage with extracellular inserted */
 void (*nrnthread_vi_compute_)(NrnThread* nt);
-#endif
-
-#if VECTORIZE
-extern "C" int v_structure_change;
 #endif
 
 #if CVODE
@@ -857,7 +851,7 @@ int nrn_errno_check(Prop* p, int inode, Section* sec) {
                 "%d errno set at t=%g during call to mechanism %s at node %d in section %s\n",
                 nrnmpi_myid,
                 t,
-                memb_func[p->type].sym->name,
+                memb_func[p->_type].sym->name,
                 inode,
                 secname(sec));
     }
@@ -1109,7 +1103,7 @@ void nrn_ba(NrnThread* nt, int bat) {
         int type = tbl->bam->type;
         Memb_list* ml = tbl->ml;
         for (i = 0; i < ml->nodecount; ++i) {
-            (*f)(ml->nodelist[i], ml->data[i], ml->pdata[i], ml->_thread, nt);
+            (*f)(ml->nodelist[i], ml->_data[i], ml->pdata[i], ml->_thread, nt);
         }
     }
 }
@@ -1186,14 +1180,14 @@ int nrn_nonvint_block_helper(int method, int size, double* pd1, double* pd2, int
 #define var_(arg) p[var[arg]]
 
 /* ARGSUSED */
-extern "C" int euler_thread(int neqn,
-                            int* var,
-                            int* der,
-                            double* p,
-                            int (*func)(double*, Datum*, Datum*, NrnThread*),
-                            Datum* ppvar,
-                            Datum* thread,
-                            NrnThread* nt) {
+int euler_thread(int neqn,
+                 int* var,
+                 int* der,
+                 double* p,
+                 int (*func)(double*, Datum*, Datum*, NrnThread*),
+                 Datum* ppvar,
+                 Datum* thread,
+                 NrnThread* nt) {
     int i;
     double dt = nt->_dt;
 

@@ -2,10 +2,10 @@
 
 #include <OS/list.h>
 #include <OS/string.h>
-#include <OS/math.h>
 #if HAVE_IV
 #include "ivoc.h"
 #endif
+#include "nrniv_mf.h"
 #include "nrnoc2iv.h"
 #include "ocobserv.h"
 #include "ivocvect.h"
@@ -18,7 +18,6 @@
 
 extern double t;
 extern NetCvode* net_cvode_instance;
-extern "C" Point_process* ob2pntproc(Object*);
 
 // Vector.play_remove()
 void nrn_vecsim_remove(void* v) {
@@ -43,7 +42,7 @@ void nrn_vecsim_add(void* v, bool record) {
         iarg = 1;
         ppobj = *hoc_objgetarg(1);
         if (!ppobj || ppobj->ctemplate->is_point_ <= 0 ||
-            nrn_is_artificial_[ob2pntproc(ppobj)->prop->type]) {
+            nrn_is_artificial_[ob2pntproc(ppobj)->prop->_type]) {
             hoc_execerror("Optional first arg is not a POINT_PROCESS", 0);
         }
     }

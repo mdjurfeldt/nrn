@@ -13,9 +13,6 @@
 #define nt_t  nrn_threads->_t
 #define nt_dt nrn_threads->_dt
 
-extern "C" int diam_change_cnt;
-extern "C" int structure_change_cnt;
-
 typedef struct LongDifus {
     int dchange;
     int* mindex; /* index into memb_list[m] */
@@ -168,7 +165,7 @@ static void longdifus_diamchange(LongDifus* pld, int m, int sindex, Memb_list* m
         if (sindex < 0) {
             pld->state[i] = ml->pdata[mi][-sindex - 1].pval;
         } else {
-            pld->state[i] = ml->data[mi] + sindex;
+            pld->state[i] = ml->_data[mi] + sindex;
         }
         nd = ml->nodelist[mi];
         pindex = pld->pindex[i];
@@ -350,7 +347,7 @@ stagger(int m, ldifusfunc3_t diffunc, void** v, int ai, int sindex, int dindex, 
     ml = v2ml(v, _nt->id);
 
     n = ml->nodecount;
-    data = ml->data;
+    data = ml->_data;
     pdata = ml->pdata;
     thread = ml->_thread;
 
@@ -423,7 +420,7 @@ ode(int m, ldifusfunc3_t diffunc, void** v, int ai, int sindex, int dindex, NrnT
     ml = v2ml(v, _nt->id);
 
     n = ml->nodecount;
-    data = ml->data;
+    data = ml->_data;
     pdata = ml->pdata;
     thread = ml->_thread;
 
@@ -482,7 +479,7 @@ matsol(int m, ldifusfunc3_t diffunc, void** v, int ai, int sindex, int dindex, N
     ml = v2ml(v, _nt->id);
 
     n = ml->nodecount;
-    data = ml->data;
+    data = ml->_data;
     pdata = ml->pdata;
     thread = ml->_thread;
 
