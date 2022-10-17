@@ -157,9 +157,9 @@ create_coef_list makes a list for fast setup, does minimum ordering and
 ensures all elements needed are present */
 /* this could easily be made recursive but it isn't right now */
 
-#define s_(arg) p[s[arg]]
-#define d_(arg) p[d[arg]]
-int sparse_thread(void** v, int n, int* s, int* d, double* p, double* t, double dt, FUN fun, int linflag, void* ppvar, void* thread, void *nt) {
+#define s_(arg) *p[s[arg]]
+#define d_(arg) *p[d[arg]]
+int sparse_thread(void** v, int n, int* s, int* d, double** p, double* t, double dt, FUN fun, int linflag, void* ppvar, void* thread, void *nt) {
 	int i, j, ierr;
 	double err;
 	SparseObj* so;
@@ -207,10 +207,10 @@ int _cvode_sparse_thread(v, n, x, p, fun, ppvar, thread, nt)
 	void** v;
 	int n;
 	FUN fun;
-	double *p;
+	double **p;
 	int *x;
 	void* ppvar; void* thread; void* nt;
-#define x_(arg) p[x[arg]]
+#define x_(arg) *p[x[arg]]
 {
 	int i, j, ierr;
 	SparseObj* so;
