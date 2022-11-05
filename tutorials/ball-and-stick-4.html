@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ball and stick 4: Parallel vs serial mode &mdash; NEURON  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python RXD tutorials" href="../rxd-tutorials/index.html" />
+    <link rel="prev" title="Ball and stick 3: Extensible network of cells" href="ball-and-stick-3.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> NEURON
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Building:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cmake_doc/index.html">CMake Build Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/developer.html">Developer Builds</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../videos/index.html">Training videos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../courses/exercises2018.html">NEURON Course Exercises</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://neuron.yale.edu/phpBB">The NEURON forum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications about NEURON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications-using-neuron.html">Publications using NEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">NEURON scripting:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../python/index.html">NEURON Python documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hoc/index.html">NEURON HOC documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../otherscripting.html">Other scripting languages</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythontutorial.html">Introduction to Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripting-neuron-basics.html">Scripting NEURON basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ball-and-stick-1.html">Ball and stick 1: Basic cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ball-and-stick-2.html">Ball and stick 2: Build a ring network of ball-and-stick cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ball-and-stick-3.html">Ball and stick 3: Extensible network of cells</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Ball and stick 4: Parallel vs serial mode</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Parallel-communication-in-NEURON">Parallel communication in NEURON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Test-MPI-and-Parallel-NEURON">Test MPI and Parallel NEURON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Back-to-the-example">Back to the example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Test-the-model">Test the model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Gathering-spikes">Gathering spikes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rxd-tutorials/index.html">Python RXD tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coreneuron/index.html">CoreNEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scm/index.html">NEURON SCM and Release</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/index.html">NEURON Development topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doxygen.html">C/C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Removed Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../removed_features.html">Removed Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">NEURON 8.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#neuron-8-1">NEURON 8.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#neuron-8-0">NEURON 8.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#contributors">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#feedback-help">Feedback / Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NEURON</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python tutorials</a></li>
+      <li class="breadcrumb-item active">Ball and stick 4: Parallel vs serial mode</li>
+<li class="wy-breadcrumbs-aside">
+    
+    
+</li>
+
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/ball-and-stick-4.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Ball-and-stick-4:-Parallel-vs-serial-mode">
+<h1>Ball and stick 4: Parallel vs serial mode<a class="headerlink" href="#Ball-and-stick-4:-Parallel-vs-serial-mode" title="Permalink to this heading"></a></h1>
+<p>This is the final part of the series where we build a multicompartment cell and evolve it into a network of cells running on a parallel machine (which is basically all computers made within the last decade). On this page, we translate the classes we have previously constructed so that they operate in either a parallel or serial mode.</p>
+<p>Note: If you followed the Quick Start instructions on the NEURON website, you should have everything you need to run parallel simulations. If not, if you do not already have an MPI installation, go to that link and follow the instructions in “Step 4: Install MPI to enable parallel simulations.” If you compiled NEURON yourself instead of using an installer (this is almost-never necessary), this part of the tutorial requires you to have used the <code class="docutils literal notranslate"><span class="pre">--with-paranrn</span></code> flag at configure time.</p>
+<div class="section" id="Parallel-communication-in-NEURON">
+<h2>Parallel communication in NEURON<a class="headerlink" href="#Parallel-communication-in-NEURON" title="Permalink to this heading"></a></h2>
+<p>Parallel communication takes place via logical events in network connection objects known as NetCon. NetCon sources are threshold detectors. They monitor some variable, say the membrane potential of a cell, and when the variable reaches some threshold, it triggers an event sent to the targets. Targets are frequently synapses on other cells. When they receive the event, they activate.</p>
+<p>In a parallel context across several machines, communication between hosts can be computationally inefficient when the frequency of events is high and when the message being sent is large. NEURON uses an efficient priority queueing mechanism to deliver events to targets after the delay specified by the NetCon. The message passed is succinct. It is an integer, the unique global identifier (gid) of the source. The following two figures illustrate these ideas and come from Hines M.L. and Carnevale
+N.T, Translating network models to parallel hardware in NEURON, Journal of Neuroscience Methods 169 (2008) 425–455. Users should also consult the ParallelContext reference.</p>
+<center><p><img alt="1613d5db1ebb4460b99eacc59df23e49" src="https://neuron.yale.edu/neuron/static/docs/neuronpython/_images/parfig2.1.png" /></p>
+</center><center><p><img alt="8625fe6eba8d47a2b19ffb465d0bd1fa" src="https://neuron.yale.edu/neuron/static/docs/neuronpython/_images/parfig2.2.png" /></p>
+</center><p>The main step involved in making a parallel implementation is to assign the global identifiers across the various hosts. Care should also be taken to assign cells to the various hosts such that the system is load balanced. For example, in a network with computationally complex and simple cells, several simple cells may be assigned to a host while few complex cells may be assigned to another host.</p>
+</div>
+<div class="section" id="Test-MPI-and-Parallel-NEURON">
+<h2>Test MPI and Parallel NEURON<a class="headerlink" href="#Test-MPI-and-Parallel-NEURON" title="Permalink to this heading"></a></h2>
+<p>Once again, parallel NEURON requires MPI support. If this is your first time using it in a while, you should test your computer setup.</p>
+<p>Create a file called <code class="docutils literal notranslate"><span class="pre">testmpi.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neuron</span> <span class="kn">import</span> <span class="n">h</span>
+<span class="n">h</span><span class="o">.</span><span class="n">nrnmpi_init</span><span class="p">()</span>       <span class="c1"># initialize MPI</span>
+<span class="n">pc</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">ParallelContext</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I am </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">pc</span><span class="o">.</span><span class="n">nhost</span><span class="p">()))</span>
+<span class="n">h</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>              <span class="c1"># necessary to avoid a warning message on parallel exit on some systems</span>
+</pre></div>
+</div>
+<p>Run the script in parallel via e.g.&nbsp;<code class="docutils literal notranslate"><span class="pre">mpiexec</span> <span class="pre">-n</span> <span class="pre">4</span> <span class="pre">python</span> <span class="pre">testmpi.py</span></code> from the command line in a terminal. You should see output resembling:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">numprocs</span><span class="o">=</span><span class="m">4</span>
+I am <span class="m">1</span> of <span class="m">4</span>
+I am <span class="m">2</span> of <span class="m">4</span>
+I am <span class="m">3</span> of <span class="m">4</span>
+I am <span class="m">0</span> of <span class="m">4</span>
+</pre></div>
+</div>
+<p>These could appear in any order since in theory they are running simultaneously but must print out in some order. If instead you see four processes claiming to be 0 of 1, then your copy of NEURON was not compiled with support for parallel simulation. Reconfigure with the <code class="docutils literal notranslate"><span class="pre">--with-paranrn</span></code> flag, recompile, and try again. If you get an error saying that <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> is an unknown command, then MPI is either not installed or not on your PATH; correct your MPI setup and try again.</p>
+</div>
+<div class="section" id="Back-to-the-example">
+<h2>Back to the example<a class="headerlink" href="#Back-to-the-example" title="Permalink to this heading"></a></h2>
+<p>Begin by downloading ballandstick.py into your working directory. This is equivalent to the classes we created in the previous part of the tutorial.</p>
+<p>We will construct a <code class="docutils literal notranslate"><span class="pre">ring.py</span></code> based on the previous <code class="docutils literal notranslate"><span class="pre">Ring</span></code> class. Changes are indicated with <code class="docutils literal notranslate"><span class="pre">###</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neuron</span> <span class="kn">import</span> <span class="n">h</span>
+<span class="kn">from</span> <span class="nn">ballandstick</span> <span class="kn">import</span> <span class="n">BallAndStick</span>
+
+<span class="c1">### MPI must be initialized before we create a ParallelContext object</span>
+<span class="n">h</span><span class="o">.</span><span class="n">nrnmpi_init</span><span class="p">()</span>
+<span class="n">pc</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">ParallelContext</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Ring</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A network of *N* ball-and-stick cells where cell n makes an</span>
+<span class="sd">    excitatory synapse onto cell n + 1 and the last, Nth cell in the</span>
+<span class="sd">    network projects to the first cell.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">stim_w</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">stim_t</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">stim_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">syn_w</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">syn_delay</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param N: Number of cells.</span>
+<span class="sd">        :param stim_w: Weight of the stimulus</span>
+<span class="sd">        :param stim_t: time of the stimulus (in ms)</span>
+<span class="sd">        :param stim_delay: delay of the stimulus (in ms)</span>
+<span class="sd">        :param syn_w: Synaptic weight</span>
+<span class="sd">        :param syn_delay: Delay of the synapse</span>
+<span class="sd">        :param r: radius of the network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_N</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gids</span><span class="p">()</span>                   <span class="c1">### assign gids to processors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_syn_w</span> <span class="o">=</span> <span class="n">syn_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_syn_delay</span> <span class="o">=</span> <span class="n">syn_delay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_cells</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>             <span class="c1">### changed to use self._N instead of passing in N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connect_cells</span><span class="p">()</span>
+        <span class="c1">### the 0th cell only exists on one process... that&#39;s the only one that gets a netstim</span>
+        <span class="k">if</span> <span class="n">pc</span><span class="o">.</span><span class="n">gid_exists</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_netstim</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">NetStim</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_netstim</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_netstim</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">stim_t</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nc</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">NetCon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_netstim</span><span class="p">,</span> <span class="n">pc</span><span class="o">.</span><span class="n">gid2cell</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">syn</span><span class="p">)</span>   <span class="c1">### grab cell with gid==0 wherever it exists</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nc</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">stim_delay</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nc</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">stim_w</span>
+
+    <span class="k">def</span> <span class="nf">set_gids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the gidlist on this host.&quot;&quot;&quot;</span>
+        <span class="c1">#### Round-robin counting.</span>
+        <span class="c1">#### Each host has an id from 0 to pc.nhost() - 1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gidlist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_N</span><span class="p">,</span> <span class="n">pc</span><span class="o">.</span><span class="n">nhost</span><span class="p">()))</span>
+        <span class="k">for</span> <span class="n">gid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gidlist</span><span class="p">:</span>
+            <span class="n">pc</span><span class="o">.</span><span class="n">set_gid2node</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">pc</span><span class="o">.</span><span class="n">id</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_create_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cells</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gidlist</span><span class="p">:</span>    <span class="c1">### only create the cells that exist on this host</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="o">.</span><span class="n">PI</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_N</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BallAndStick</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
+        <span class="c1">### associate the cell with this host and gid</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+            <span class="n">pc</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">_gid</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">_spike_detector</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_connect_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">### this method is different because we now must use ids instead of objects</span>
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+            <span class="n">source_gid</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">_gid</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_N</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_N</span>
+            <span class="n">nc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">gid_connect</span><span class="p">(</span><span class="n">source_gid</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">syn</span><span class="p">)</span>
+            <span class="n">nc</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_syn_w</span>
+            <span class="n">nc</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_syn_delay</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">_ncs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The call to <code class="docutils literal notranslate"><span class="pre">h.nrnmpi_init()</span></code> must happen before any use of the ParallelContext class – which forms a key part of any NEURON parallel simulation.</p>
+<p>The only conceptually new method here is the <code class="docutils literal notranslate"><span class="pre">set_gids</span></code> method where each process specifies which cells it will simulate. Here we use what is known as a round-robin approach, where the <code class="docutils literal notranslate"><span class="pre">pc.id()</span></code>th process starts at <code class="docutils literal notranslate"><span class="pre">pc.id()</span></code> and skips by however many processes are running (<code class="docutils literal notranslate"><span class="pre">pc.nhost</span></code>).</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">_create_cells</span></code>, we now associate the cell <code class="docutils literal notranslate"><span class="pre">gid</span></code> with the NetCon <code class="docutils literal notranslate"><span class="pre">_spike_detector</span></code>. This allows the <code class="docutils literal notranslate"><span class="pre">_connect_cells</span></code> to make connections based on gids instead of objects, using <code class="docutils literal notranslate"><span class="pre">pc.gid_connect</span></code>.</p>
+</div>
+<div class="section" id="Test-the-model">
+<h2>Test the model<a class="headerlink" href="#Test-the-model" title="Permalink to this heading"></a></h2>
+<p>Here’s a basic test, <code class="docutils literal notranslate"><span class="pre">test_ring1.py</span></code> that loads the <code class="docutils literal notranslate"><span class="pre">Ring</span></code> class and plots cell 0’s membrane potential timeseries:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neuron</span> <span class="kn">import</span> <span class="n">h</span>
+<span class="kn">from</span> <span class="nn">neuron.units</span> <span class="kn">import</span> <span class="n">ms</span><span class="p">,</span> <span class="n">mV</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">ring</span> <span class="kn">import</span> <span class="n">Ring</span>
+
+<span class="n">cell_to_plot</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">ring</span> <span class="o">=</span> <span class="n">Ring</span><span class="p">()</span>
+
+<span class="n">pc</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">ParallelContext</span><span class="p">()</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">set_maxstep</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">ms</span><span class="p">)</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">Vector</span><span class="p">()</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">_ref_t</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class="n">finitialize</span><span class="p">(</span><span class="o">-</span><span class="mi">65</span> <span class="o">*</span> <span class="n">mV</span><span class="p">)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">psolve</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">ms</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">pc</span><span class="o">.</span><span class="n">gid_exists</span><span class="p">(</span><span class="n">cell_to_plot</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pc</span><span class="o">.</span><span class="n">gid2cell</span><span class="p">(</span><span class="n">cell_to_plot</span><span class="p">)</span><span class="o">.</span><span class="n">soma_v</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">pc</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+<span class="n">h</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The code above should look very familiar.</p>
+<p>The conceptually new pieces are:</p>
+<ul><li><p>pc.set_maxstep(10 * ms) – sets an upper bound on how far MPI can simulate without communicating, here a simulated 10 ms. This must be called before attempting a parallel simulation.</p>
+</li><li><p>pc.psolve(100 * ms) – a parallel version of h.continuerun, but does not support updating NEURON graphics during the simulation.</p>
+</li><li><p>pc.gid_exists – only the process that owns the specified cell should make the plot.</p>
+</li><li><p>pc.gid2cell – lookup a cell by gid</p>
+</li><li><p>pc.barrier() – wait until all processes reach this point; used to make sure processes don’t shut down before the graph is closed</p>
+</li></ul><p>Start by testing this without using MPI:</p>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">test_ring1.py</span></code></p>
+<p>You should see: <img alt="test_ring1.png" src="data:image/png;base64,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" /></p>
+<p>And once you are satisfied that works, you can try MPI, e.g.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpiexec</span> <span class="pre">-n</span> <span class="pre">2</span> <span class="pre">python</span> <span class="pre">test_ring1.py</span></code></p>
+</div>
+<div class="section" id="Gathering-spikes">
+<h2>Gathering spikes<a class="headerlink" href="#Gathering-spikes" title="Permalink to this heading"></a></h2>
+<p>Our above test runs the simulation successfully, but in the end, no single process knows when all the spikes occurred. There are a number of ways to deal with this: one solution is to have each process write its data to a file. Instead, we will use pc.py_alltoall to send all the data to node 0, at which point node 0 can plot the raster, save data, or whatever.</p>
+<p>Store this in <code class="docutils literal notranslate"><span class="pre">test_ring2.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neuron</span> <span class="kn">import</span> <span class="n">h</span>
+<span class="kn">from</span> <span class="nn">neuron.units</span> <span class="kn">import</span> <span class="n">ms</span><span class="p">,</span> <span class="n">mV</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">ring</span> <span class="kn">import</span> <span class="n">Ring</span>
+
+<span class="n">ring</span> <span class="o">=</span> <span class="n">Ring</span><span class="p">()</span>
+
+<span class="n">pc</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">ParallelContext</span><span class="p">()</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">set_maxstep</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">ms</span><span class="p">)</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">Vector</span><span class="p">()</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">_ref_t</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class="n">finitialize</span><span class="p">(</span><span class="o">-</span><span class="mi">65</span> <span class="o">*</span> <span class="n">mV</span><span class="p">)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">psolve</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">ms</span><span class="p">)</span>
+
+<span class="c1"># send all spike time data to node 0</span>
+<span class="n">local_data</span> <span class="o">=</span> <span class="p">{</span><span class="n">cell</span><span class="o">.</span><span class="n">_gid</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">spike_times</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ring</span><span class="o">.</span><span class="n">cells</span><span class="p">}</span>
+<span class="n">all_data</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">py_alltoall</span><span class="p">([</span><span class="n">local_data</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">nhost</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">pc</span><span class="o">.</span><span class="n">id</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># combine the data from the various processes</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">process_data</span> <span class="ow">in</span> <span class="n">all_data</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">process_data</span><span class="p">)</span>
+    <span class="c1"># plot it</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">spike_times</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">spike_times</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">pc</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+<span class="n">h</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Running this via e.g.&nbsp;<code class="docutils literal notranslate"><span class="pre">mpiexec</span> <span class="pre">-n</span> <span class="pre">2</span> <span class="pre">python</span> <span class="pre">test_ring2.py</span></code> displays the familiar raster plot. If you are wondering why node 0 was the one chosen to make the plot, it is because that is the only node that is guaranteed to exist (nothing else exists if there is only one process being used for the simulation).</p>
+<p>You should see: <img alt="test_ring2.png" src="data:image/png;base64,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" /></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ball-and-stick-3.html" class="btn btn-neutral float-left" title="Ball and stick 3: Extensible network of cells" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../rxd-tutorials/index.html" class="btn btn-neutral float-right" title="Python RXD tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Duke, Yale and the Blue Brain Project.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

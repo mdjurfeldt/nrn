@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Windows build &mdash; NEURON  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Code Coverage" href="code_coverage.html" />
+    <link rel="prev" title="Building Python Wheels" href="python_wheels.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> NEURON
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Building:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cmake_doc/index.html">CMake Build Options</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer.html">Developer Builds</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mac_pkg.html">Mac Binary Package (Apple M1 and Mac x86_64)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_wheels.html">Building Python Wheels</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Windows build</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pre-requisites">Pre-requisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-environment-installation">Build Environment installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-build-neuron">How to build NEURON</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="code_coverage.html">Code Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debug.html">Diagnosis and Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debug.html#profiling-and-performance-benchmarking">Profiling and performance benchmarking</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../videos/index.html">Training videos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../courses/exercises2018.html">NEURON Course Exercises</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://neuron.yale.edu/phpBB">The NEURON forum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications about NEURON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications-using-neuron.html">Publications using NEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">NEURON scripting:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python/index.html">NEURON Python documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hoc/index.html">NEURON HOC documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../otherscripting.html">Other scripting languages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Python tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rxd-tutorials/index.html">Python RXD tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../coreneuron/index.html">CoreNEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scm/index.html">NEURON SCM and Release</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/index.html">NEURON Development topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doxygen.html">C/C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Removed Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../removed_features.html">Removed Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">NEURON 8.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#neuron-8-1">NEURON 8.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#neuron-8-0">NEURON 8.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#contributors">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#feedback-help">Feedback / Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NEURON</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="developer.html">Developer Builds</a></li>
+      <li class="breadcrumb-item active">Windows build</li>
+<li class="wy-breadcrumbs-aside">
+    
+    
+</li>
+
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/install/windows.md.txt" rel="nofollow"> View page source</a>
+      </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="windows-build">
+<h1>Windows build<a class="headerlink" href="#windows-build" title="Permalink to this heading"></a></h1>
+<div class="section" id="pre-requisites">
+<h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this heading"></a></h2>
+<p>You need to install the following:</p>
+<ul class="simple">
+<li>Git: <a class="reference external" href="https://git-scm.com/">https://git-scm.com/</a></li>
+<li>Chocolatey: <a class="reference external" href="https://chocolatey.org/">https://chocolatey.org/</a></li>
+<li>Visual Studio with C++: <a class="reference external" href="https://visualstudio.microsoft.com/vs/features/cplusplus/">https://visualstudio.microsoft.com/vs/features/cplusplus/</a></li>
+<li><code class="docutils literal notranslate"><span class="pre">pwsh</span></code> (grab the latest PowerShell release on GitHub: <a class="reference external" href="https://github.com/PowerShell/PowerShell/releases/latest">https://github.com/PowerShell/PowerShell/releases/latest</a>)</li>
+</ul>
+</div>
+<div class="section" id="build-environment-installation">
+<h2>Build Environment installation<a class="headerlink" href="#build-environment-installation" title="Permalink to this heading"></a></h2>
+<p>You can follow the lines of the scripts from the <code class="docutils literal notranslate"><span class="pre">ci</span></code> folder. The scripts can also be launched as-is for local installation. Perform a git clone of the <code class="docutils literal notranslate"><span class="pre">nrn</span></code> repository.</p>
+<p>From a powershell with <strong>administrator</strong> priviledges, run:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">workspace</span><span class="p">\</span><span class="n">nrn</span><span class="p">&gt;</span> <span class="p">.\</span><span class="n">ci</span><span class="p">\</span><span class="n">win_download_deps</span><span class="p">.</span><span class="n">cmd</span>
+</pre></div>
+</div>
+<p>This will download all required installers and corresponding versions(<code class="docutils literal notranslate"><span class="pre">Python</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI</span></code>, <code class="docutils literal notranslate"><span class="pre">nsis</span></code>)</p>
+<p>Then launch the installation script:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">workspace</span><span class="p">\</span><span class="n">nrn</span><span class="p">&gt;</span> <span class="p">.\</span><span class="n">ci</span><span class="p">\</span><span class="n">win_install_deps</span><span class="p">.</span><span class="n">cmd</span>
+</pre></div>
+</div>
+<p>in order to:</p>
+<ul class="simple">
+<li>install all downloaded Python versions and for each:<ul>
+<li>fix MSVCC version</li>
+<li>fix MSVC runtime library</li>
+<li>install numpy</li>
+</ul>
+</li>
+<li>install <code class="docutils literal notranslate"><span class="pre">nsis</span></code> and required plugin</li>
+<li>install MPI</li>
+<li>install MSYS2 (via <code class="docutils literal notranslate"><span class="pre">Chocolatey</span></code>) and then MinGW toolchain and required build pacakages</li>
+</ul>
+</div>
+<div class="section" id="how-to-build-neuron">
+<h2>How to build NEURON<a class="headerlink" href="#how-to-build-neuron" title="Permalink to this heading"></a></h2>
+<p>For a complete <code class="docutils literal notranslate"><span class="pre">build/install/create</span> <span class="pre">setup.exe</span></code>, in a <code class="docutils literal notranslate"><span class="pre">MinGW64</span></code> shell you can run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bash ci/win_build_cmake.sh
+</pre></div>
+</div>
+<p>As you can see in the script, a typical configuration would be:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/mingw64/bin/cmake .. <span class="se">\</span>
+	-G <span class="s1">&#39;Unix Makefiles&#39;</span>  <span class="se">\</span>
+	-DNRN_ENABLE_MPI_DYNAMIC<span class="o">=</span>ON  <span class="se">\</span>
+	-DNRN_ENABLE_MPI<span class="o">=</span>ON  <span class="se">\</span>
+	-DCMAKE_PREFIX_PATH<span class="o">=</span><span class="s1">&#39;/c/msmpi&#39;</span>  <span class="se">\</span>
+	-DNRN_ENABLE_INTERVIEWS<span class="o">=</span>ON  <span class="se">\</span>
+	-DNRN_ENABLE_PYTHON<span class="o">=</span>ON  <span class="se">\</span>
+	-DNRN_ENABLE_RX3D<span class="o">=</span>ON  <span class="se">\</span>
+	-DNRN_RX3D_OPT_LEVEL<span class="o">=</span><span class="m">2</span> <span class="se">\</span>
+	-DPYTHON_EXECUTABLE<span class="o">=</span>/c/Python37/python.exe <span class="se">\</span>
+	-DNRN_ENABLE_PYTHON_DYNAMIC<span class="o">=</span>ON  <span class="se">\</span>
+	-DNRN_PYTHON_DYNAMIC<span class="o">=</span><span class="s1">&#39;c:/Python37/python.exe;c:/Python38/python.exe;c:/Python39/python.exe;c:/Python310/python.exe&#39;</span>  <span class="se">\</span>
+	-DCMAKE_INSTALL_PREFIX<span class="o">=</span><span class="s1">&#39;/c/nrn-install&#39;</span> <span class="se">\</span>
+	-DMPI_CXX_LIB_NAMES:STRING<span class="o">=</span>msmpi <span class="se">\</span>
+	-DMPI_C_LIB_NAMES:STRING<span class="o">=</span>msmpi <span class="se">\</span>
+	-DMPI_msmpi_LIBRARY:FILEPATH<span class="o">=</span>c:/msmpi/lib/x64/msmpi.lib
+</pre></div>
+</div>
+<p>To create the Windows installer, you need to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make install
+make setup_exe
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="python_wheels.html" class="btn btn-neutral float-left" title="Building Python Wheels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="code_coverage.html" class="btn btn-neutral float-right" title="Code Coverage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Duke, Yale and the Blue Brain Project.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

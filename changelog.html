@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEURON 8.2 &mdash; NEURON  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/design-tabs.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Removed Features" href="removed_features.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> NEURON
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Building:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmake_doc/index.html">CMake Build Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install/developer.html">Developer Builds</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="videos/index.html">Training videos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="courses/exercises2018.html">NEURON Course Exercises</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://neuron.yale.edu/phpBB">The NEURON forum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications about NEURON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications-using-neuron.html">Publications using NEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">NEURON scripting:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python/index.html">NEURON Python documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hoc/index.html">NEURON HOC documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otherscripting.html">Other scripting languages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Python tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rxd-tutorials/index.html">Python RXD tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coreneuron/index.html">CoreNEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scm/index.html">NEURON SCM and Release</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">NEURON Development topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doxygen.html">C/C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Removed Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="removed_features.html">Removed Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NEURON 8.2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">8.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-s-new">What’s New</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#improvements-other-changes">Improvements /  Other Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">8.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">What’s New</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#breaking-changes">Breaking Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deprecations-future-changes">Deprecations &amp; future changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Improvements /  Other Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#upgrade-steps">Upgrade Steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#neuron-8-1">NEURON 8.1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id6">8.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">What’s New</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Breaking Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deprecations">Deprecations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Improvements / Other Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Upgrade Steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#neuron-8-0">NEURON 8.0</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id12">8.0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">8.0.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id15">What’s New</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id16">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17">Improvements /  Other Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id18">8.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id19">What’s New</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id20">Breaking Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id21">Deprecations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id22">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id23">Improvements /  Other Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id24">Upgrade Steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#contributors">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#feedback-help">Feedback / Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEURON</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">NEURON 8.2</li>
+<li class="wy-breadcrumbs-aside">
+    
+    
+</li>
+
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/changelog.md.txt" rel="nofollow"> View page source</a>
+      </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="neuron-8-2">
+<h1>NEURON 8.2<a class="headerlink" href="#neuron-8-2" title="Permalink to this heading"></a></h1>
+<div class="section" id="id1">
+<h2>8.2.1<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p><em>Release Date</em> : 12-08-2022</p>
+<div class="section" id="what-s-new">
+<h3>What’s New<a class="headerlink" href="#what-s-new" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Change mcomplex.dat normalization to hh/5. (#1895)</li>
+<li>Jupyter support for ModelView #1907</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>nrnivmodl_core_makefile: fix SDKROOT (#1942)</li>
+<li>First time declaration of section in template must be at command level. (#1914)</li>
+<li>setup.exe installer must distribute env.exe (https://github.com/neuronsimulator/nrn/pull/1941)</li>
+</ul>
+</div>
+<div class="section" id="improvements-other-changes">
+<h3>Improvements /  Other Changes<a class="headerlink" href="#improvements-other-changes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Documentation<ul>
+<li>added new INCF/CNS 2022 online material (#1932)</li>
+<li>updates (dealing with sims, generating movie, modelview, more #1925 )</li>
+<li>transfer from Yale website (#1867)</li>
+</ul>
+</li>
+<li>nrnmpi_load: drop printf for already loaded lib (#1938)</li>
+</ul>
+<p>For the complete list of commits, see the list in <a class="reference external" href="https://github.com/neuronsimulator/nrn/issues/1944">GitHub Issue #1944</a></p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>8.2.0<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<p><em>Release Date</em> : 01-07-2022</p>
+<div class="section" id="id3">
+<h3>What’s New<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Allow multiple BEFORE/AFTER blocks of same type in a MOD file. #1722</li>
+<li>Several documentation updates, including randomness in NEURON models #1727,
+NEURON course exercise sets from 2018 #1735 and publications using NEURON #1819.</li>
+<li>CMake: improved documentation targets. (#1725)</li>
+</ul>
+</div>
+<div class="section" id="breaking-changes">
+<h3>Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Support for Python 3.6 was dropped, as it has reached end-of-life (#1733).</li>
+<li>In this release, more declarations of NEURON methods (typically <code class="docutils literal notranslate"><span class="pre">nrn_</span></code> and
+<code class="docutils literal notranslate"><span class="pre">hoc_</span></code> functions) are implicitly included in translated MOD files. This can
+cause compilation errors with MOD files that include incorrect declarations
+of these methods in <code class="docutils literal notranslate"><span class="pre">VERBATIM</span></code> blocks. (#1755, #1811, #1825).</li>
+<li>Declaring STATE variables as GLOBAL is now disallowed. (#1723)</li>
+</ul>
+</div>
+<div class="section" id="deprecations-future-changes">
+<h3>Deprecations &amp; future changes<a class="headerlink" href="#deprecations-future-changes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>NEURON is in the process of being fully migrated to a <code class="docutils literal notranslate"><span class="pre">C++</span></code> codebase.<br />Starting with next major release <code class="docutils literal notranslate"><span class="pre">9.0.0</span></code>, <code class="docutils literal notranslate"><span class="pre">MOD</span></code> files will be converted to <code class="docutils literal notranslate"><span class="pre">C++</span></code> instead of <code class="docutils literal notranslate"><span class="pre">C</span></code>.
+This will break compatibility with some legacy MOD files containing VERBATIM blocks and code may have to be updated
+given that some valid C code is not valid C++.
+A migration <a class="reference external" href="https://github.com/neuronsimulator/nrn/blob/80778700048f3aeefd35477308151bf7dd118941/docs/guide/porting_mechanisms_to_cpp.rst">guide</a>
+is being compiled in the latest online documentation (note that it may change post release).</li>
+<li><code class="docutils literal notranslate"><span class="pre">Random123</span></code> will be the default random number generator in NEURON and most of the random number distributions implementations will be
+replaced by those in the C++ standard library, while a few will be discontinued. See  <a class="reference external" href="https://github.com/neuronsimulator/nrn/issues/1330">#1330</a> for follow-up and questions.</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h3>Bug Fixes<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Fix for #335: Return proper exit code in hoc execution #1633</li>
+<li>Build on Ubuntu21.10 WSL: escape special characters (#1862)</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>Improvements /  Other Changes<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Support for using <code class="docutils literal notranslate"><span class="pre">mallinfo2()</span></code> (#1805)</li>
+<li>HOC domain for Sphinx <code class="docutils literal notranslate"><span class="pre">5.0.1</span></code></li>
+</ul>
+</div>
+<div class="section" id="upgrade-steps">
+<h3>Upgrade Steps<a class="headerlink" href="#upgrade-steps" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>If your MOD files contain VERBATIM blocks you may need to refer to the aforementioned
+<a class="reference external" href="https://github.com/neuronsimulator/nrn/blob/80778700048f3aeefd35477308151bf7dd118941/docs/guide/porting_mechanisms_to_cpp.rst">C++ migration guide</a>
+and make minor changes to prepare for the upcoming <code class="docutils literal notranslate"><span class="pre">9.0.0</span></code> release.
+Remaining compatible with <code class="docutils literal notranslate"><span class="pre">8.2.0</span></code> and older versions is typically straightforward.</li>
+</ul>
+<p>For the complete list of features and bug fixes, see the list in <a class="reference external" href="https://github.com/neuronsimulator/nrn/issues/1879">GitHub Issue #1879</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="neuron-8-1">
+<h1>NEURON 8.1<a class="headerlink" href="#neuron-8-1" title="Permalink to this heading"></a></h1>
+<div class="section" id="id6">
+<h2>8.1.0<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h2>
+<p><em>Release Date</em> : 25-03-2022</p>
+<div class="section" id="id7">
+<h3>What’s New<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Python wheels<ul>
+<li>Support for ARM (Aarch64) Platform wheels via CircleCI - Python 3.6 to 3.10 (#1676)</li>
+<li>Apple M1 Platform wheels - Python 3.8 to 3.10 (#1649)</li>
+<li>NVIDIA GPU enabled wheels<ul>
+<li>First iteration released under a separate package: <code class="docutils literal notranslate"><span class="pre">neuron-gpu</span></code><ul>
+<li>Must use NVHPC 21.1 SDK when you compile your MOD files (#1657)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Improved CoreNEURON support (#1705)<ul>
+<li>Use vendor compilers like Intel, Cray or NVHPC for better performance when you compile MOD files using <code class="docutils literal notranslate"><span class="pre">nrnivmodl</span></code>.</li>
+</ul>
+</li>
+<li>Support for HPE MPT MPI library (#1498)</li>
+<li>Linux wheels are now <code class="docutils literal notranslate"><span class="pre">manylinux2014</span></code> (#1365)</li>
+</ul>
+</li>
+<li>MacOS <code class="docutils literal notranslate"><span class="pre">universal2</span></code> package installer now available - Python 3.8 to 3.10</li>
+<li>CoreNEURON<ul>
+<li>Tight integration for both in-memory and as well as file transfer mode</li>
+<li>Extend CoreNEURON POINTER transfer to any RANGE variable in a NRN_THREAD (#1622)</li>
+<li>Support for BEFORE/AFTER constructs in MOD file (#1581)</li>
+</ul>
+</li>
+<li>RXD<ul>
+<li>SaveState support added (#1586)</li>
+<li>Dynamic extracellular tortuosity and volume fraction (#1260)</li>
+<li>3D support for importing multiple morphologies and for moving imported morphologies (#1147)</li>
+</ul>
+</li>
+<li>Dedicated CI repository <a class="reference external" href="https://github.com/neuronsimulator/nrn-build-ci">nrn-build-ci</a> to check builds on different distributions. Check this if you have build issues.</li>
+<li>Documentation<ul>
+<li>Integrated various documentation &amp; tutorials from neuron.yale.edu website to the readthedocs (#1674)</li>
+<li>Added training videos, guides and a list of NEURON publications</li>
+<li>CoreNEURON: usage, MOD files compatibility/migration, profiling and (GPU) performance benchmarking</li>
+<li>RxD programmer’s reference expanded and rewritten (#1680)</li>
+<li>Propose changes directly from ReadTheDocs - click on <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">on</span> <span class="pre">GitHub</span></code></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h3>Breaking Changes<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Models using <code class="docutils literal notranslate"><span class="pre">_NrnThread</span></code> in a VERBATIM block will fail now. Change it to <code class="docutils literal notranslate"><span class="pre">NrnThread</span></code>.<a class="reference external" href="https://github.com/neuronsimulator/nrn/pull/1609">See #1609</a>.</li>
+<li>Minimum CMake version supported is now 3.15.0 (#1408)</li>
+<li>Python2 and Python3.5 support dropped</li>
+<li>Legacy internal <code class="docutils literal notranslate"><span class="pre">readline</span></code> source code is removed, must have Readline installed (#1371)</li>
+<li>Python wheels are now manylinux2014 (#1365)</li>
+</ul>
+</div>
+<div class="section" id="deprecations">
+<h3>Deprecations<a class="headerlink" href="#deprecations" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>NEURON is being migrated to a C++ codebase and beginning with the next release <code class="docutils literal notranslate"><span class="pre">MOD</span></code> files will be converted to <code class="docutils literal notranslate"><span class="pre">C++</span></code> instead of <code class="docutils literal notranslate"><span class="pre">C</span></code>.
+This might break compatibility with some legacy MOD files containing <code class="docutils literal notranslate"><span class="pre">VERBATIM</span></code> blocks.
+We will update the NEURON documentation describing how one can make MOD files compatible with this change.</li>
+<li>Python 3.6 Is End-of-Life - drop support after 8.1 release (#1651)</li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h3>Bug Fixes<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Can use ParallelContext.mpiabort_on_error(0) to say do not call to MPI_Abort on error (#1567)</li>
+<li>OpenMPI initialisation crash: argv[argc] should be null. (#1682)</li>
+<li>Avoid segfault if error during construction of POINT_PROCESS (#1627)</li>
+<li>Fixes a 1D/3D voxelization problem where frusta are outside the 3D grid. (#1227)</li>
+<li>Allow for two point (single section) SWC somas (#1144)</li>
+<li>Fix for current response in 3D reaction-diffusion simulations (#1721)</li>
+<li><code class="docutils literal notranslate"><span class="pre">rxdmath.abs</span></code> no longer raises an exception (#1545)</li>
+<li>Fixes for 3D reaction-diffusion grid alignment edge cases (#1471, #1227)</li>
+<li>Update coreneuron : gpu bugfix for the BBP models (#1374)</li>
+<li>Fix UndefinedBehaviourSanitizer errors. (#1518)</li>
+<li>import3d_gui bugfix for HOC classes and top-level (#1159)</li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h3>Improvements / Other Changes<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Documentation<ul>
+<li>sphinx jupyter notebooks integration via <code class="docutils literal notranslate"><span class="pre">nbsphinx</span></code> (#1684)</li>
+<li>Update CoreNEURON documentation. (#1650)</li>
+<li>Building python wheels &amp; managing NEURON Docker Images (#1469)</li>
+<li>Short tutorial on using the profiler interface (#1453)</li>
+<li>docs: Updated several rxd tutorials (#1061)</li>
+<li>docs: WSL &amp; Linux Python Wheel (#1496)</li>
+<li>Update GPU profiling documentation (#1538)</li>
+</ul>
+</li>
+<li>Testing and coverage<ul>
+<li>Integration of tqperf model for CI and CoreNEURON testing (#1556)</li>
+<li>Add olfactory bulb mode as external test (#1541)</li>
+<li>Add reduced dentate model tests (#1515)</li>
+<li>Add BBP channel-benchmark to CTest suite. (#1439)</li>
+<li>Make neuronsimulator/nrntest part of the CI (#1429)</li>
+</ul>
+</li>
+<li>Refactorings<ul>
+<li>Move codebase to CPP  (#763)</li>
+<li>Remove all code related to NRN_REALTIME and NRN_DAQ  (#1401)</li>
+<li>Drop legacy hash implementations: nrnhash (#1403)</li>
+<li>Remove absolute paths from generated code for ccache builds (#1574)</li>
+<li>Using std::unordered_map as Gid2PreSyn/Int2TarList (#1568)</li>
+<li>nrnivmodl succeeds when there are no mod files (#1583)</li>
+<li>Fix UndefinedBehaviourSanitizer errors. (#1518)</li>
+<li>Remove copy of readline (#1396)</li>
+<li>Remove multisend specific for BlueGene (DMA) (#1294)</li>
+</ul>
+</li>
+<li>Improvements<ul>
+<li>Possible to prefer python from $PATH when building from source with CMake #1659</li>
+<li>User can use MPI_LIB_NRN_PATH to provide MPI library on linux platform (#1172)</li>
+<li>MPI Multisend available in NEURON by default (#1537)</li>
+<li>modlunit: Add CHARGE keyword and map it to VALENCE. (#1508)</li>
+<li>Allow user to specify dialog popup location. (#1487)</li>
+<li>Allow python section.disconnect(). (#1451)</li>
+<li>Implement BBSaveState for Python cells (#1355)</li>
+<li>macos build_wheels: add /usr/x11 to CMAKE_PREFIX_PATH (#1565)</li>
+<li>Add NRN_NMODL_CXX_FLAGS to facilitate cross compilation (#1174)</li>
+</ul>
+</li>
+<li>RXD<ul>
+<li>Faster convergence rate for surface voxel partial volume estimation (#1555)</li>
+<li>Internal API for saving/restoring 3D voxelization (#1476)</li>
+<li>Prevent RxD keeping objects alive (#1270, #1103, #1072)</li>
+<li>Improved assignment of 3D voxels to segments (#1149)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h3>Upgrade Steps<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Linux wheels are now <code class="docutils literal notranslate"><span class="pre">manylinux2014</span></code>: upgrade your <code class="docutils literal notranslate"><span class="pre">pip</span></code></li>
+<li>Legacy internal <code class="docutils literal notranslate"><span class="pre">readline</span></code> source code is removed: install <code class="docutils literal notranslate"><span class="pre">readline</span></code> on your system</li>
+<li>Python2 and Python3.5 support dropped: migrate to Python 3.7+ (3.6 is deprecated)</li>
+</ul>
+<p>For the complete list of features and bug fixes, see <code class="docutils literal notranslate"><span class="pre">Commits</span> <span class="pre">going</span> <span class="pre">into</span> <span class="pre">8.1.0</span></code> in <a class="reference external" href="https://github.com/neuronsimulator/nrn/issues/1719">GitHub Issue #1719</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="neuron-8-0">
+<h1>NEURON 8.0<a class="headerlink" href="#neuron-8-0" title="Permalink to this heading"></a></h1>
+<div class="section" id="id12">
+<h2>8.0.2<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h2>
+<p><em>Release Date</em> : 02-02-2022</p>
+<div class="section" id="id13">
+<h3>Bug Fixes<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h3>
+<p>Python 3.10 bugfixes for RXD and Windows, more details in <a class="reference external" href="https://github.com/neuronsimulator/nrn/pull/1614">GitHub PR #1614</a></p>
+</div>
+</div>
+<div class="section" id="id14">
+<h2>8.0.1<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h2>
+<p><em>Release Date</em> : 28-01-2022</p>
+<div class="section" id="id15">
+<h3>What’s New<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Python 3.10 support &amp; wheels</li>
+</ul>
+</div>
+<div class="section" id="id16">
+<h3>Bug Fixes<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h3>
+<p>For the complete list of bug fixes, see the list in <a class="reference external" href="https://github.com/neuronsimulator/nrn/pull/1603">GitHub PR #1603</a></p>
+</div>
+<div class="section" id="id17">
+<h3>Improvements /  Other Changes<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Introduce a Sphinx HOC domain for NEURON documentation</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id18">
+<h2>8.0.0<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h2>
+<p><em>Release Date</em> : 30-04-2021</p>
+<div class="section" id="id19">
+<h3>What’s New<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Dynamic selection of legacy vs modern units using HOC/Python API (<strong>default</strong> : modern)</li>
+<li>Faster reaction-diffusion support</li>
+<li>Initial GPU support using integration of CoreNEURON</li>
+<li>Binary installer for new Apple M1 platform</li>
+<li>Binary wheel distribution for Python 3.9 and Python 2.7</li>
+<li>Release of NMODL version 0.3 (available as python wheel)</li>
+<li>Versioned documentation available via <a class="reference external" href="https://nrn.readthedocs.io/en/latest/">nrn.readthedocs.io</a></li>
+<li>CMake as a primary build system for NEURON and Interviews</li>
+</ul>
+</div>
+<div class="section" id="id20">
+<h3>Breaking Changes<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">h.Section</span></code> now interprets positional arguments as <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">cell</span></code>. Previously positional arguments were interpreted in the other order. (Calling it with keyword arguments is unchanged.)</li>
+<li>For 3d reaction-diffusion simulations, the voxelization and segment mapping algorithms have been adjusted, especially around the soma. Voxel indices and sometimes counts will change from previous versions.</li>
+</ul>
+</div>
+<div class="section" id="id21">
+<h3>Deprecations<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Five functions in the <code class="docutils literal notranslate"><span class="pre">neuron</span></code> module: <code class="docutils literal notranslate"><span class="pre">neuron.init</span></code>, <code class="docutils literal notranslate"><span class="pre">neuron.run</span></code>, <code class="docutils literal notranslate"><span class="pre">neuron.psection</span></code>, <code class="docutils literal notranslate"><span class="pre">neuron.xopen</span></code>, and <code class="docutils literal notranslate"><span class="pre">neuron.quit</span></code>.</li>
+<li>Autotools build is deprecated and will be removed in the next release. Use CMake instead.</li>
+<li>Python 2 and Python 3.5 support  is deprecated and will be removed in the next release. Use <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">&gt;=</span> <span class="pre">3.6</span></code></li>
+</ul>
+</div>
+<div class="section" id="id22">
+<h3>Bug Fixes<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h3>
+<p>For the complete list of bug fixes, see the list on the <a class="reference external" href="https://github.com/neuronsimulator/nrn/issues/1211#issuecomment-826919173">GitHub here</a>.</p>
+</div>
+<div class="section" id="id23">
+<h3>Improvements /  Other Changes<a class="headerlink" href="#id23" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Allow for two point (single section) SWC somas</li>
+<li>GitHub Actions and Azure as primary CI systems. Travis CI removed.</li>
+<li>GitHub <a class="reference external" href="https://github.com/neuronsimulator/nrn/releases">Releases</a> provides full source tarballs, binary installers and python wheels.</li>
+<li>Improved testing and CI infrastructure including GPUs</li>
+<li><a class="reference external" href="https://github.com/neuronsimulator/nrn-build-ci">nrn-build-ci</a> repository test nightly builds for Ubuntu 18.04, Ubuntu 20.04, Fedora 32, Fedora 33, CentOS7, CentOS8, Debian Buster (10) and macOS 10.15 platforms.</li>
+<li>Improved integration of CoreNEURON</li>
+<li>Support for recent numpy version</li>
+<li>Various build improvements on Linux, MacOS and HPC platforms</li>
+<li>Documentation from various repositories is consolidated under <code class="docutils literal notranslate"><span class="pre">nrn</span></code> repository</li>
+<li>New releases via Spack and Easybuild package managers</li>
+<li>Fix deadlock when compiling NEURON with AVX-512</li>
+<li>Add backward-cpp for better backtraces</li>
+<li>NEURON_MODULE_OPTIONS environment variable to pass in nrniv options before <code class="docutils literal notranslate"><span class="pre">neuron</span> <span class="pre">import</span></code></li>
+</ul>
+</div>
+<div class="section" id="id24">
+<h3>Upgrade Steps<a class="headerlink" href="#id24" title="Permalink to this heading"></a></h3>
+<p>Existing models should work without any changes.  In order to upgrade NEURON version you can:</p>
+<ul class="simple">
+<li>Use python wheels provided for Linux or Mac OS platform</li>
+<li>Use binary installer provided for windows</li>
+<li>Install from source, preferably using CMake build system</li>
+<li>For new version, it’s always a good idea to start over from scratch with nrnivmodl (deleting existing directory like <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>)</li>
+</ul>
+<p>See <code class="docutils literal notranslate"><span class="pre">Installation</span></code> section under <a class="reference external" href="nrn.readthedocs.io/">nrn.readthedocs.io/</a>. In the very rare case that numerical differences exist, check selection of legacy vs modern units.</p>
+</div>
+</div>
+</div>
+<div class="section" id="contributors">
+<h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this heading"></a></h1>
+<p>See the list of contributors on respective GitHub projects:</p>
+<ul class="simple">
+<li>NEURON : <a class="reference external" href="https://github.com/neuronsimulator/nrn/graphs/contributors">https://github.com/neuronsimulator/nrn/graphs/contributors</a></li>
+<li>CoreNEURON : <a class="reference external" href="https://github.com/BlueBrain/CoreNeuron/graphs/contributors">https://github.com/BlueBrain/CoreNeuron/graphs/contributors</a></li>
+<li>NMODL : <a class="reference external" href="https://github.com/BlueBrain/nmodl/graphs/contributors">https://github.com/BlueBrain/nmodl/graphs/contributors</a></li>
+</ul>
+</div>
+<div class="section" id="feedback-help">
+<h1>Feedback / Help<a class="headerlink" href="#feedback-help" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li>Software related issues should be reported on GitHub : <a class="reference external" href="https://github.com/neuronsimulator/nrn/issues/new/choose">https://github.com/neuronsimulator/nrn/issues/new/choose</a></li>
+<li>For developing models and any scientific questions, see NEURON forum : <a class="reference external" href="https://www.neuron.yale.edu/phpBB/">https://www.neuron.yale.edu/phpBB/</a></li>
+<li>If you want to participate / contribute to the development of NEURON, you can join monthly developers meeting : <a class="reference external" href="https://github.com/neuronsimulator/nrn/wiki">https://github.com/neuronsimulator/nrn/wiki</a></li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="removed_features.html" class="btn btn-neutral float-left" title="Removed Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Duke, Yale and the Blue Brain Project.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

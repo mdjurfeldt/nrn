@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>&lt;no title&gt; &mdash; NEURON  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/design-tabs.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NEURON
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Building:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cmake_doc/index.html">CMake Build Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/developer.html">Developer Builds</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../videos/index.html">Training videos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../courses/exercises2018.html">NEURON Course Exercises</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://neuron.yale.edu/phpBB">The NEURON forum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications about NEURON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications-using-neuron.html">Publications using NEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">NEURON scripting:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../python/index.html">NEURON Python documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hoc/index.html">NEURON HOC documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../otherscripting.html">Other scripting languages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Python tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rxd-tutorials/index.html">Python RXD tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coreneuron/index.html">CoreNEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scm/index.html">NEURON SCM and Release</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/index.html">NEURON Development topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doxygen.html">C/C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Removed Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../removed_features.html">Removed Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">NEURON 8.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html#neuron-8-1">NEURON 8.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html#neuron-8-0">NEURON 8.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html#contributors">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html#feedback-help">Feedback / Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NEURON</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">&lt;no title&gt;</li>
+<li class="wy-breadcrumbs-aside">
+    
+    
+</li>
+
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/guide/data/idraw-readme.txt" rel="nofollow"> View page source</a>
+      </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<p>NAME
+idraw - drawing editor</p>
+<p>SYNOPSIS
+idraw [options] [file]</p>
+<p>DESCRIPTION
+Idraw is a drawing editor that  lets  you  create  and  edit
+drawings made up of graphics like text, lines, splines, rec-
+tangles, polygons, and ellipses.   Drawings  are  stored  in
+files  that can be printed on a PostScript printer.  You can
+can open an existing drawing when starting up idraw by  typ-
+ing a file name on the command line.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">Idraw</span> <span class="n">displays</span> <span class="n">a</span> <span class="n">portrait</span> <span class="ow">or</span> <span class="n">landscape</span> <span class="n">view</span> <span class="n">of</span> <span class="n">an</span> <span class="mf">8.5</span> <span class="n">by</span>  <span class="mi">11</span>
+ <span class="n">inch</span>  <span class="n">page</span> <span class="ow">in</span> <span class="n">its</span> <span class="n">drawing</span> <span class="n">area</span><span class="o">.</span>  <span class="n">In</span> <span class="n">a</span> <span class="n">column</span> <span class="n">along</span> <span class="n">the</span> <span class="n">draw</span><span class="o">-</span>
+ <span class="n">ing</span> <span class="n">area</span><span class="s1">&#39;s left side is a set of  drawing  tool  icons,  and</span>
+ <span class="n">above</span>  <span class="n">the</span> <span class="n">drawing</span> <span class="n">area</span> <span class="ow">is</span> <span class="n">a</span> <span class="nb">set</span> <span class="n">of</span> <span class="n">pull</span><span class="o">-</span><span class="n">down</span> <span class="n">menus</span> <span class="n">contain</span><span class="o">-</span>
+ <span class="n">ing</span> <span class="n">commands</span><span class="o">.</span>  <span class="n">A</span> <span class="n">panner</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">lower</span> <span class="n">left</span>  <span class="n">corner</span>  <span class="n">lets</span>  <span class="n">you</span>
+ <span class="n">pan</span>  <span class="ow">and</span>  <span class="n">zoom</span> <span class="n">the</span> <span class="n">the</span> <span class="n">drawing</span> <span class="n">area</span><span class="o">.</span>  <span class="n">Along</span> <span class="n">the</span> <span class="n">top</span> <span class="ow">is</span> <span class="n">a</span> <span class="nb">set</span>
+ <span class="n">of</span> <span class="n">indicators</span> <span class="n">that</span> <span class="n">display</span> <span class="n">editing</span> <span class="n">information</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>DRAWING TOOLS
+You must engage a tool before you can use it.  You engage  a
+tool  by  clicking  on  its  icon or by typing the character
+below and to the right of its icon.  The icon of the drawing
+tool  that’s  engaged  appears  in  inverted  colors.   Once
+engaged, you use the tool by clicking the left mouse  button
+in the drawing area.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">The</span> <span class="n">Select</span><span class="p">,</span> <span class="n">Move</span><span class="p">,</span> <span class="n">Scale</span><span class="p">,</span> <span class="n">Stretch</span><span class="p">,</span> <span class="n">Rotate</span><span class="p">,</span>  <span class="ow">and</span>  <span class="n">Alter</span>  <span class="n">tools</span>
+ <span class="n">manipulate</span>  <span class="n">existing</span>  <span class="n">graphics</span><span class="o">.</span>  <span class="n">Magnify</span> <span class="n">makes</span> <span class="n">a</span> <span class="n">part</span> <span class="n">of</span> <span class="n">the</span>
+ <span class="n">view</span> <span class="n">expand</span> <span class="n">to</span> <span class="n">fill</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">view</span><span class="o">.</span>  <span class="n">Text</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Multiline</span><span class="p">,</span>
+ <span class="n">Open</span>  <span class="n">Spline</span><span class="p">,</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">Rectangle</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="ow">and</span> <span class="n">Closed</span> <span class="n">Spline</span>
+ <span class="n">create</span> <span class="n">new</span> <span class="n">graphics</span><span class="o">.</span>  <span class="n">Each</span> <span class="n">tool</span> <span class="n">works</span> <span class="k">as</span> <span class="n">follows</span><span class="p">:</span>
+
+ <span class="n">Select</span>         <span class="n">Select</span> <span class="n">a</span> <span class="n">graphic</span><span class="p">,</span> <span class="n">unselecting</span> <span class="nb">all</span> <span class="n">others</span><span class="o">.</span>   <span class="n">A</span>
+                <span class="n">graphic</span>  <span class="ow">is</span> <span class="n">selected</span> <span class="k">if</span> <span class="n">its</span> <span class="n">handles</span> <span class="n">are</span> <span class="n">visi</span><span class="o">-</span>
+                <span class="n">ble</span><span class="o">.</span>  <span class="n">Handles</span> <span class="n">are</span> <span class="n">small</span> <span class="n">inverse</span><span class="o">-</span><span class="n">video</span> <span class="n">squares</span>
+                <span class="n">that</span> <span class="n">either</span> <span class="n">surround</span> <span class="n">the</span> <span class="n">graphic</span> <span class="ow">or</span> <span class="n">demarcate</span>
+                <span class="n">its</span> <span class="n">important</span> <span class="n">points</span> <span class="p">(</span><span class="n">such</span> <span class="k">as</span>  <span class="n">the</span>  <span class="n">endpoints</span>
+                <span class="n">of</span>  <span class="n">a</span>  <span class="n">line</span><span class="p">)</span><span class="o">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">hold</span> <span class="n">down</span> <span class="n">the</span> <span class="n">shift</span> <span class="n">key</span><span class="p">,</span>
+                <span class="n">Select</span> <span class="n">extends</span> <span class="n">the</span> <span class="n">selection</span><span class="p">:</span> <span class="n">it</span> <span class="n">selects</span>  <span class="n">the</span>
+                <span class="n">unselected</span> <span class="n">graphic</span> <span class="p">(</span><span class="ow">or</span> <span class="n">unselects</span> <span class="n">the</span> <span class="n">selected</span>
+                <span class="n">graphic</span><span class="p">)</span> <span class="n">you</span> <span class="n">clicked</span> <span class="n">on</span> <span class="n">but</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">unselect</span>
+                <span class="n">other</span>  <span class="n">selections</span><span class="o">.</span>   <span class="n">Clicking</span>  <span class="n">anywhere</span> <span class="n">other</span>
+                <span class="n">than</span> <span class="n">on</span> <span class="n">a</span> <span class="n">graphic</span> <span class="n">unselects</span>  <span class="n">everything</span><span class="p">;</span>  <span class="n">you</span>
+                <span class="n">may</span> <span class="n">also</span> <span class="n">drag</span> <span class="n">a</span> <span class="n">rubberband</span> <span class="n">rectangle</span> <span class="n">around</span> <span class="n">a</span>
+                <span class="n">group</span> <span class="n">of</span> <span class="n">graphics</span> <span class="n">to</span> <span class="n">select</span> <span class="nb">all</span>  <span class="n">of</span>  <span class="n">them</span>  <span class="n">at</span>
+                <span class="n">once</span><span class="o">.</span>    <span class="n">Shortcut</span><span class="p">:</span>  <span class="n">the</span>  <span class="n">right</span>  <span class="n">mouse</span>  <span class="n">button</span>
+                <span class="n">invokes</span> <span class="n">Select</span> <span class="k">while</span>  <span class="n">the</span>  <span class="n">mouse</span>  <span class="ow">is</span>  <span class="ow">in</span>  <span class="n">the</span>
+                <span class="n">drawing</span> <span class="n">area</span><span class="o">.</span>
+
+ <span class="n">Move</span>           <span class="n">Move</span>  <span class="n">graphics</span>  <span class="kn">from</span>  <span class="nn">one</span>  <span class="n">spot</span>  <span class="n">to</span>  <span class="n">another</span><span class="o">.</span>
+                <span class="n">Shortcut</span><span class="p">:</span>  <span class="n">the</span>  <span class="n">middle</span>  <span class="n">mouse</span>  <span class="n">button</span> <span class="n">invokes</span>
+                <span class="n">Move</span> <span class="k">while</span> <span class="n">the</span> <span class="n">mouse</span> <span class="ow">is</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">drawing</span> <span class="n">area</span><span class="o">.</span>
+
+ <span class="n">Scale</span>          <span class="n">Scale</span> <span class="n">graphics</span> <span class="n">about</span> <span class="n">their</span> <span class="n">centers</span><span class="o">.</span>
+
+ <span class="n">Stretch</span>        <span class="n">Stretch</span> <span class="n">graphics</span> <span class="n">vertically</span>  <span class="ow">or</span>  <span class="n">horizontally</span>
+                <span class="k">while</span> <span class="n">tying</span> <span class="n">down</span> <span class="n">the</span> <span class="n">opposite</span> <span class="n">edge</span><span class="o">.</span>
+
+ <span class="n">Rotate</span>         <span class="n">Rotate</span> <span class="n">graphics</span> <span class="n">about</span> <span class="n">their</span> <span class="n">centers</span> <span class="n">according</span>
+                <span class="n">to</span>  <span class="n">the</span>  <span class="n">angle</span>  <span class="n">between</span>  <span class="n">two</span>  <span class="n">radii</span><span class="p">:</span>  <span class="n">the</span> <span class="n">one</span>
+                <span class="n">defined</span> <span class="n">by</span> <span class="n">the</span> <span class="n">original</span>  <span class="n">clicking</span>  <span class="n">point</span>  <span class="ow">and</span>
+                <span class="n">the</span>  <span class="n">one</span>  <span class="n">defined</span>  <span class="n">by</span>  <span class="n">the</span>  <span class="n">current</span>  <span class="n">dragging</span>
+                <span class="n">point</span><span class="o">.</span>
+
+ <span class="n">Alter</span>          <span class="n">Modify</span> <span class="n">a</span> <span class="n">graphic</span><span class="s1">&#39;s  structure.   This  tool&#39;</span><span class="n">s</span>
+                <span class="n">effect</span> <span class="ow">is</span> <span class="n">described</span> <span class="n">below</span> <span class="k">for</span> <span class="n">each</span> <span class="n">graphic</span><span class="o">.</span>
+
+ <span class="n">Magnify</span>        <span class="n">Magnify</span> <span class="n">a</span> <span class="n">portion</span> <span class="n">of</span> <span class="n">the</span> <span class="n">drawing</span> <span class="n">specified</span> <span class="n">by</span>
+                <span class="n">sweeping</span>  <span class="n">out</span> <span class="n">a</span> <span class="n">rectangular</span> <span class="n">area</span><span class="o">.</span>  <span class="n">Idraw</span> <span class="n">will</span>
+                <span class="n">magnify</span> <span class="n">the</span> <span class="n">area</span> <span class="n">to</span> <span class="n">occupy</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">screen</span><span class="p">,</span>
+                <span class="k">if</span> <span class="n">possible</span><span class="o">.</span>
+
+ <span class="n">Text</span>           <span class="n">Create</span> <span class="n">some</span> <span class="n">text</span><span class="o">.</span>  <span class="n">Left</span><span class="o">-</span><span class="n">click</span> <span class="n">to</span> <span class="n">position</span> <span class="n">the</span>
+                <span class="n">first</span>  <span class="n">line</span>  <span class="n">of</span>  <span class="n">text</span><span class="p">,</span>  <span class="ow">and</span> <span class="n">then</span> <span class="nb">type</span> <span class="k">as</span> <span class="n">much</span>
+                <span class="n">text</span> <span class="k">as</span> <span class="n">you</span> <span class="n">want</span><span class="o">.</span>  <span class="n">You</span>  <span class="n">may</span>  <span class="n">use</span>  <span class="n">emacs</span><span class="o">-</span><span class="n">style</span>
+                <span class="n">keystrokes</span>  <span class="n">to</span> <span class="n">edit</span> <span class="n">the</span> <span class="n">text</span> <span class="k">as</span> <span class="n">well</span> <span class="k">as</span> <span class="n">enter</span>
+                <span class="n">it</span><span class="o">.</span>  <span class="n">You</span> <span class="n">can</span> <span class="n">leave</span> <span class="n">text</span> <span class="n">editing</span> <span class="n">mode</span> <span class="n">by</span>  <span class="n">typ</span><span class="o">-</span>
+                <span class="n">ing</span> <span class="n">ESC</span> <span class="ow">or</span> <span class="n">by</span> <span class="n">simply</span> <span class="n">clicking</span> <span class="n">somewhere</span> <span class="k">else</span><span class="o">.</span>
+                <span class="n">The</span> <span class="n">Alter</span> <span class="n">tool</span> <span class="n">lets</span> <span class="n">you</span> <span class="n">edit</span> <span class="n">the</span> <span class="n">text</span>  <span class="ow">in</span>  <span class="n">an</span>
+                <span class="n">existing</span> <span class="n">text</span> <span class="n">graphic</span><span class="o">.</span>
+
+ <span class="n">Line</span>           <span class="n">Create</span> <span class="n">a</span> <span class="n">line</span><span class="o">.</span>  <span class="n">The</span> <span class="n">shift</span> <span class="n">key</span> <span class="n">constrains</span>  <span class="n">the</span>
+                <span class="n">line</span>  <span class="n">to</span>  <span class="n">lie</span>  <span class="n">on</span>  <span class="n">either</span> <span class="n">the</span> <span class="n">vertical</span> <span class="ow">or</span> <span class="n">the</span>
+                <span class="n">horizontal</span> <span class="n">axis</span><span class="o">.</span>  <span class="n">You</span> <span class="n">may</span> <span class="n">left</span><span class="o">-</span><span class="n">click</span> <span class="k">with</span> <span class="n">the</span>
+                <span class="n">Alter</span>  <span class="n">tool</span>  <span class="n">on</span>  <span class="n">either</span> <span class="n">endpoint</span> <span class="n">of</span> <span class="n">a</span> <span class="n">line</span> <span class="n">to</span>
+                <span class="n">move</span> <span class="n">the</span> <span class="n">endpoint</span> <span class="n">to</span> <span class="n">a</span> <span class="n">new</span> <span class="n">location</span><span class="o">.</span>
+
+ <span class="n">Multiline</span>      <span class="n">Create</span> <span class="n">a</span> <span class="nb">set</span> <span class="n">of</span> <span class="n">connected</span> <span class="n">lines</span><span class="o">.</span>   <span class="n">The</span>  <span class="n">shift</span>
+                <span class="n">key</span>  <span class="n">constrains</span> <span class="n">each</span> <span class="n">segment</span> <span class="n">to</span> <span class="n">lie</span> <span class="n">on</span> <span class="n">either</span>
+                <span class="n">the</span> <span class="n">vertical</span> <span class="ow">or</span> <span class="n">the</span>  <span class="n">horizontal</span>  <span class="n">axis</span><span class="o">.</span>   <span class="n">Each</span>
+                <span class="n">left</span><span class="o">-</span><span class="n">click</span> <span class="n">starts</span> <span class="n">a</span> <span class="n">new</span> <span class="n">segment</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span><span class="p">,</span> <span class="n">adds</span> <span class="n">a</span>
+                <span class="n">vertex</span><span class="p">);</span> <span class="n">each</span> <span class="n">right</span><span class="o">-</span><span class="n">click</span>  <span class="n">removes</span>  <span class="n">the</span>  <span class="n">last</span>
+                <span class="n">vertex</span>  <span class="n">added</span><span class="o">.</span>   <span class="n">The</span>  <span class="n">middle</span> <span class="n">button</span> <span class="n">finalizes</span>
+                <span class="n">the</span> <span class="n">multiline</span><span class="o">.</span>  <span class="n">The</span> <span class="n">Alter</span> <span class="n">tool</span> <span class="n">lets</span> <span class="n">you</span> <span class="n">move</span><span class="p">,</span>
+                <span class="n">add</span><span class="p">,</span>  <span class="ow">and</span>  <span class="n">remove</span>  <span class="n">vertices</span>  <span class="kn">from</span> <span class="nn">an</span> <span class="n">existing</span>
+                <span class="n">multiline</span><span class="o">.</span>
+
+ <span class="n">Open</span> <span class="n">Spline</span>    <span class="n">Create</span> <span class="n">an</span> <span class="nb">open</span> <span class="n">B</span><span class="o">-</span><span class="n">spline</span><span class="o">.</span>  <span class="n">The</span> <span class="n">shift</span> <span class="n">key</span>  <span class="n">con</span><span class="o">-</span>
+                <span class="n">strains</span>  <span class="n">each</span>  <span class="n">control</span> <span class="n">point</span> <span class="n">to</span> <span class="n">lie</span> <span class="n">on</span> <span class="n">either</span>
+                <span class="n">the</span> <span class="n">vertical</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">horizontal</span> <span class="n">axis</span> <span class="k">with</span>  <span class="n">the</span>
+                <span class="n">preceding</span>  <span class="n">point</span><span class="o">.</span>   <span class="n">Each</span>  <span class="n">left</span><span class="o">-</span><span class="n">click</span>  <span class="n">adds</span>  <span class="n">a</span>
+                <span class="n">control</span> <span class="n">point</span><span class="p">;</span> <span class="n">each</span> <span class="n">right</span><span class="o">-</span><span class="n">click</span>  <span class="n">removes</span>  <span class="n">the</span>
+                <span class="n">last</span>  <span class="n">control</span> <span class="n">point</span> <span class="n">added</span><span class="o">.</span>  <span class="n">The</span> <span class="n">middle</span> <span class="n">button</span>
+                <span class="n">finalizes</span> <span class="n">the</span> <span class="n">spline</span><span class="o">.</span>  <span class="n">The</span>  <span class="n">Alter</span>  <span class="n">tool</span>  <span class="n">lets</span>
+                <span class="n">you</span> <span class="n">move</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="ow">and</span> <span class="n">remove</span> <span class="n">control</span> <span class="n">points</span> <span class="kn">from</span>
+                <span class="nn">an</span> <span class="n">existing</span> <span class="nb">open</span> <span class="n">spline</span><span class="o">.</span>
+
+ <span class="n">Ellipse</span>        <span class="n">Create</span> <span class="n">an</span> <span class="n">ellipse</span><span class="o">.</span>  <span class="n">The</span> <span class="n">shift</span> <span class="n">key</span>  <span class="n">constrains</span>
+                <span class="n">the</span>  <span class="n">ellipse</span>  <span class="n">to</span>  <span class="n">the</span> <span class="n">shape</span> <span class="n">of</span> <span class="n">a</span> <span class="n">circle</span><span class="o">.</span>  <span class="n">The</span>
+                <span class="n">Alter</span> <span class="n">tool</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">affect</span> <span class="n">ellipses</span><span class="o">.</span>
+
+ <span class="n">Rectangle</span>      <span class="n">Create</span> <span class="n">a</span> <span class="n">rectangle</span><span class="o">.</span>  <span class="n">The</span> <span class="n">shift</span> <span class="n">key</span> <span class="n">constrains</span>
+                <span class="n">the</span>  <span class="n">rectangle</span> <span class="n">to</span> <span class="n">the</span> <span class="n">shape</span> <span class="n">of</span> <span class="n">a</span> <span class="n">square</span><span class="o">.</span>  <span class="n">The</span>
+                <span class="n">Alter</span> <span class="n">tool</span>  <span class="n">lets</span>  <span class="n">you</span>  <span class="n">move</span>  <span class="n">the</span>  <span class="n">rectangle</span><span class="s1">&#39;s</span>
+                <span class="n">corners</span>  <span class="n">independently</span>  <span class="n">to</span>  <span class="n">form</span> <span class="n">a</span> <span class="n">four</span><span class="o">-</span><span class="n">sided</span>
+                <span class="n">polygon</span><span class="o">.</span>
+
+ <span class="n">Polygon</span>        <span class="n">Create</span> <span class="n">a</span> <span class="n">polygon</span><span class="o">.</span>  <span class="n">The</span> <span class="n">shift</span>  <span class="n">key</span>  <span class="n">constrains</span>
+                <span class="n">each</span>  <span class="n">side</span>  <span class="n">to</span>  <span class="n">lie</span> <span class="n">on</span> <span class="n">either</span> <span class="n">the</span> <span class="n">vertical</span> <span class="ow">or</span>
+                <span class="n">the</span> <span class="n">horizontal</span> <span class="n">axis</span><span class="o">.</span>  <span class="n">Each</span> <span class="n">left</span><span class="o">-</span><span class="n">click</span>  <span class="n">starts</span>
+                <span class="n">a</span>  <span class="n">new</span>  <span class="n">segment</span>  <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span><span class="p">,</span>  <span class="n">adds</span> <span class="n">a</span> <span class="n">vertex</span><span class="p">);</span> <span class="n">each</span>
+                <span class="n">right</span><span class="o">-</span><span class="n">click</span> <span class="n">removes</span> <span class="n">the</span>  <span class="n">last</span>  <span class="n">vertex</span>  <span class="n">added</span><span class="o">.</span>
+                <span class="n">The</span> <span class="n">middle</span> <span class="n">button</span> <span class="n">finalizes</span> <span class="n">the</span> <span class="n">polygon</span><span class="o">.</span>  <span class="n">The</span>
+                <span class="n">Alter</span> <span class="n">tool</span> <span class="n">lets</span> <span class="n">you</span>  <span class="n">move</span><span class="p">,</span>  <span class="n">add</span><span class="p">,</span>  <span class="ow">and</span>  <span class="n">remove</span>
+                <span class="n">vertices</span> <span class="kn">from</span> <span class="nn">an</span> <span class="n">existing</span> <span class="n">polygon</span><span class="o">.</span>
+
+ <span class="n">Closed</span> <span class="n">Spline</span>  <span class="n">Create</span> <span class="n">a</span> <span class="n">closed</span> <span class="n">B</span><span class="o">-</span><span class="n">spline</span><span class="o">.</span>  <span class="n">The</span> <span class="n">shift</span> <span class="n">key</span> <span class="n">con</span><span class="o">-</span>
+                <span class="n">strains</span>  <span class="n">each</span>  <span class="n">control</span> <span class="n">point</span> <span class="n">to</span> <span class="n">lie</span> <span class="n">on</span> <span class="n">either</span>
+                <span class="n">the</span> <span class="n">vertical</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">horizontal</span> <span class="n">axis</span> <span class="k">with</span>  <span class="n">the</span>
+                <span class="n">preceding</span> <span class="n">point</span><span class="o">.</span>  <span class="n">Each</span> <span class="n">left</span><span class="o">-</span><span class="n">click</span> <span class="n">adds</span> <span class="n">a</span> <span class="n">con</span><span class="o">-</span>
+                <span class="n">trol</span> <span class="n">point</span><span class="p">;</span> <span class="n">each</span> <span class="n">right</span><span class="o">-</span><span class="n">click</span> <span class="n">removes</span> <span class="n">the</span> <span class="n">last</span>
+                <span class="n">control</span>   <span class="n">point</span>  <span class="n">added</span><span class="o">.</span>   <span class="n">The</span>  <span class="n">middle</span>  <span class="n">button</span>
+                <span class="n">finalizes</span> <span class="n">the</span> <span class="n">spline</span><span class="o">.</span>  <span class="n">The</span>  <span class="n">Alter</span>  <span class="n">tool</span>  <span class="n">lets</span>
+                <span class="n">you</span> <span class="n">move</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="ow">and</span> <span class="n">remove</span> <span class="n">control</span> <span class="n">points</span> <span class="kn">from</span>
+                <span class="nn">an</span> <span class="n">existing</span> <span class="n">closed</span> <span class="n">spline</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>PULL-DOWN MENUS
+The pull-down menus File, Edit, Structure, Font, Brush, Pat-
+tern,  FgColor,  BgColor,  Align, and View above the drawing
+area contain commands for editing the drawing and  for  con-
+trolling idraw’s execution.  The File menu contains the fol-
+lowing commands to operate on files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> New            Destroy the current drawing  and  replace  it
+                with an unnamed blank drawing.
+
+ Revert         Reread the current  drawing,  destroying  any
+                unsaved changes.
+
+ Open...        Specify an existing drawing to edit through a
+                FileChooser(3I),  which  lets  you browse the
+                file system easily.
+
+ Save As...     Save the current drawing in  a  file  with  a
+                specific name.
+
+ Save           Save the current drawing in the file it  came
+                from.
+
+ Print...       Send a PostScript version of the drawing to a
+                printer  or  to a file.  The bold rectangular
+                outline (called the page boundary)  appearing
+                in  the drawing area indicates the portion of
+                the drawing that will appear on  the  printed
+                page.
+
+ Import Graphic...
+                Create a graphic from the  information  in  a
+                file  and insert it into the current drawing.
+                Idraw can import images  from  files  in  the
+                following formats: TIFF; PostScript generated
+                by pgmtops, ppmtops, and idraw; X bitmap for-
+                mat; and Unidraw format.
+
+ Quit           Quit idraw.
+
+ The Edit menu contains the following  commands  for  editing
+ graphics:
+
+ Undo           Undo the last editing operation.   Successive
+                Undo  commands undo earlier and earlier edit-
+                ing operations.
+
+ Redo           Redo the last editing operation.   Successive
+                Redo  commands  redo  later and later editing
+                operations up to the first  operation  undone
+                by  Undo.   Undone  operations  that have not
+                been redone are lost as soon as a new  opera-
+                tion is performed.
+
+ Cut            Remove the selected graphics from the drawing
+                and  place  them  in a temporary storage area
+                called the clipboard.
+
+ Copy           Copy the selected  graphics  into  the  clip-
+                board.
+
+ Paste          Paste copies of the graphics in the clipboard
+                into  the  drawing.  Together, Cut, Copy, and
+                Paste let you transfer graphics between draw-
+                ings  simply  by  cutting graphics out of one
+                view and pasting them into another.
+
+ Duplicate      Duplicate the selected graphics and  add  the
+                copies to the drawing.
+
+ Delete         Destroy the selected graphics.
+
+ Select All     Select every graphic in the drawing.
+
+ Flip Horizontal, Flip Vertical
+                Flip the selected graphics into their  mirror
+                images along the horizontal or vertical axes.
+
+ 90 Clockwise, 90 CounterCW
+                Rotate  the  selected  graphics  90   degrees
+                clockwise or counterclockwise.
+
+ Precise Move..., Precise Scale..., Precise Rotate...
+                Move, scale,  or  rotate  graphics  by  exact
+                amounts  that  you type in a dialog box.  You
+                can specify movements in pixels, points, cen-
+                timeters,  or inches.  Scalings are specified
+                in terms of magnification factors in the hor-
+                izontal  and  vertical  dimensions. Rotations
+                are in degrees.
+
+ The Structure menu contains the following commands to modify
+ the  structure  of  the drawing, that is, the order in which
+ graphics are drawn:
+
+ Group          Nest the selected graphics in a newly created
+                picture.   A  picture  is just a graphic that
+                contains other graphics.  Group allows you to
+                build hierarchies of graphics.
+
+ Ungroup        Dissolve any selected pictures.
+
+ Bring To Front Bring the selected graphics to the  front  of
+                the  drawing so that they are drawn on top of
+                (after) other graphics.
+
+ Send To Back   Send the selected graphics to the back of the
+                drawing   so   that  they  are  drawn  behind
+                (before) other graphics.
+
+ The Font menu contains a set of fonts in  which  to  display
+ text.  When you set the current font from the menu, you will
+ also set all the selected graphics&#39; fonts to that  font.   A
+ font  indicator  in  the  upper  right  corner  displays the
+ current font.
+
+ The Brush menu contains a set of brushes with which to  draw
+ lines.   When  you  set the current brush from the menu, you
+ will also set all the selected  graphics&#39;  brushes  to  that
+ brush.   The  nonexistent  brush  draws  invisible lines and
+ non-outlined graphics.  The arrowhead brushes add arrowheads
+ to  either  or  both  ends  of  lines,  multilines, and open
+ splines. A brush indicator in the upper left corner displays
+ the current brush.
+
+ The Pattern menu contains a set of patterns  with  which  to
+ fill  graphics but not text.  Text always appears solid, but
+ you can use a different color than black to get a  halftoned
+ shade.   When you set the current pattern from the menu, you
+ will also set all the selected graphics&#39;  patterns  to  that
+ pattern.   The  nonexistent pattern draws unfilled graphics,
+ while the other patterns draw graphics filled with a  bitmap
+ or a halftoned shade.
+
+ The FgColor and BgColor menus contains a set of colors  with
+ which  to  draw graphics and text.  When you set the current
+ foreground or background color from the FgColor  or  BgColor
+ menu,  you  will  also  set all the selected graphics&#39; fore-
+ ground or background colors.  The ``on&#39;&#39; bits in the bitmaps
+ for  dashed lines and fill patterns appear in the foreground
+ color while the ``off&#39;&#39; bits appear in the background color.
+ A  black  and  white printer will print a halftoned shade of
+ gray for any color other than black or  white.   The  brush,
+ pattern, and font indicators all reflect the current colors.
+
+ The Align menu contains  commands  to  align  graphics  with
+ other  graphics.   The  first  graphic  selected stays fixed
+ while the  other  graphics  move  in  the  order  they  were
+ selected  according  to  the  type of alignment chosen.  The
+ last Align command, Align to Grid, aligns  a  key  point  on
+ each  selected  graphic to the nearest point on idraw&#39;s grid
+ (see below).
+
+ The View menu contains the following commands:
+
+ New View       Create a duplicate idraw window containing  a
+                second  view  of  the  current  drawing.  The
+                second view may be panned, zoomed, and edited
+                independently  of  the  first.  Any number of
+                additional views may be made in this  manner.
+                Changes  made  to  a drawing through one view
+                appear synchronously in all  other  views  of
+                the  same drawing.  You may also view another
+                drawing in any idraw window via the Open com-
+                mand.
+
+ Close View     Close the current idraw window.  Closing  the
+                last  idraw window is equivalent to issuing a
+                Quit command.
+
+ Normal Size    Set the magnification to unity so the drawing
+                appears at actual size.
+
+ Reduce to Fit  Reduce the magnification  until  the  drawing
+                fits entirely within the view.
+
+ Center Page    Center the view over the center of the 8.5 by
+                11 inch page.
+
+ Orientation    Toggle the  drawing&#39;s  orientation.   If  the
+                editor  was  formerly showing a portrait view
+                of the drawing, it will now show a  landscape
+                view of the drawing and vice versa.
+
+ Grid on/off    Toggle idraw&#39;s grid on or off.  When the grid
+                is  on,  idraw draws a grid of equally spaced
+                points behind the drawing.
+
+ Grid Spacing...
+                Change the grid spacing by specifying one  or
+                two  values  in  the  units  desired (pixels,
+                points,  centimeters,  or  inches).   If  two
+                values  are given (separated by a space), the
+                first specifies the  horizontal  spacing  and
+                second  the vertical spacing.  One value will
+                specify equal horizontal and  vertical  spac-
+                ing.
+
+ Gravity on/off Toggle gravity on or off.  Gravity constrains
+                tool  operation  to  the grid, whether or not
+                the grid is visible.
+</pre></div>
+</div>
+<p>X DEFAULTS
+You can customize the number of  undoable  changes  and  the
+font, brush, pattern, or color menus by setting resources in
+your  X  defaults  database.   Each  string  of   the   form
+<code class="docutils literal notranslate"><span class="pre">idraw.resource:definition''</span> <span class="pre">sets</span> <span class="pre">a</span> <span class="pre">resource.</span>&#160; <span class="pre">For</span> <span class="pre">example,</span> <span class="pre">to</span> <span class="pre">customize</span> <span class="pre">any</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">paint</span> <span class="pre">menus,</span> <span class="pre">set</span> <span class="pre">a</span> <span class="pre">resource</span> <span class="pre">given</span> <span class="pre">by</span> <span class="pre">the</span>&#160; <span class="pre">concatenation</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">menu's</span> <span class="pre">name</span> <span class="pre">and</span> <span class="pre">the</span> <span class="pre">entry's</span> <span class="pre">number</span> <span class="pre">(e.g.,</span> </code>idraw.pattern8’’) for each entry that you  want  to
+override.  All menus use the number 1 for the first entry.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> You must set resources only for the entries that you want to
+ override,  not  all  of them.  If you want to add entries to
+ the menus, simply set resources for  them.   However,  don&#39;t
+ skip any numbers after the end of the menu, because the menu
+ will end at the first undefined resource.  To shorten a menu
+ instead  of  extending  it,  specify  a  blank string as the
+ resource for the entry following the last.
+
+ Idraw understands the following resources:
+
+ history        Set the maximum number  of  undoable  changes
+                (20 by default).
+
+ initialfont    Specify the  font  that  will  be  active  on
+                startup.
+                 Supply a number that identifies the font  by
+                its position in the Font menu starting from 1
+                for the first entry.
+
+ fonti          Define a custom font to use for the ith entry
+                in   the   Font  menu.   Give  three  strings
+                separated by whitespace.   The  first  string
+                defines  the  font&#39;s  name, the second string
+                the corresponding print font, and  the  third
+                string   the   print   size.    For  example,
+                ``idraw.font3:8x13bold   Courier-Bold    13&#39;&#39;
+                defines the third font entry.
+
+ initialbrush   Specify the brush  that  will  be  active  on
+                startup.   Give  a number that identifies the
+                brush by  its  position  in  the  Brush  menu
+                starting from 1 for the first entry.
+
+ brushi         Define a custom brush  to  use  for  the  ith
+                entry  in  the  Brush  menu.   The definition
+                requires two numbers:  a  16-bit  hexadecimal
+                number to define the brush&#39;s line style (each
+                1 bit draws a dash and each 0 bit produces  a
+                gap),  and  a  decimal  integer to define the
+                brush&#39;s  width  in  pixels.    For   example,
+                ``idraw.brush2:ffff   1&#39;&#39;  defines  a  single
+                pixel wide  solid  line.  If  the  definition
+                specifies  only  the string ``none&#39;&#39;, then it
+                defines the nonexistent brush.
+
+ initialpattern Specify the pattern that will  be  active  on
+                startup.   Give  a number that identifies the
+                pattern by its position in the  Pattern  menu
+                starting from 1 for the first entry.
+
+ patterni       Define a custom pattern to use  for  the  ith
+                entry  in  the Pattern menu.  You can specify
+                the pattern from a 16x16 bitmap, a  8x8  bit-
+                map, a 4x4 bitmap, a grayscale number, or the
+                string ``none&#39;&#39;.  You specify the 16x16  bit-
+                map  with sixteen 16-bit hexadecimal numbers,
+                the 8x8 bitmap with eight  8-bit  hexadecimal
+                numbers,  the 4x4 bitmap with a single 16-bit
+                hexadecimal number, and the grayscale  number
+                with  a  single  floating  point number.  The
+                floating point number must contain  a  period
+                to distinguish itself from the single hexade-
+                cimal number, and it must lie between 0.0 and
+                1.0, where 0.0 corresponds to a solid pattern
+                and 1.0 to a clear pattern.  On the  printer,
+                the  bitmap  patterns  appear as bitmaps, the
+                grayscale  patterns   appear   as   halftoned
+                shades,   and  the  ``none&#39;&#39;  patterns  never
+                obscure any underlying graphics.   For  exam-
+                ple, ``idraw.pattern8:8421&#39;&#39; defines a diago-
+                nally hatched pattern.
+
+ initialfgcolor Specify the foreground  color  that  will  be
+                active  on startup.  Give a number that iden-
+                tifies the  color  by  its  position  in  the
+                FgColor  menu  starting  from 1 for the first
+                entry.
+
+ fgcolori       Define a custom color  to  use  for  the  ith
+                entry  in  the  FgColor  menu.  Give a string
+                defining the name of the color and optionally
+                three  decimal  numbers  between  0 and 65535
+                following the name to define the red,  green,
+                and blue components of the color&#39;s intensity.
+                The intensities override the name;  that  is,
+                idraw  will look the name up in a window sys-
+                tem database of common  colors  only  if  you
+                omit  the intensities.  You can define shades
+                of gray by using equal  proportions  of  each
+                primary       color.        For      example,
+                ``idraw.fgcolor8:Indigo   48896   0   65280&#39;&#39;
+                defines  a color that is a mixture of red and
+                blue.
+
+ initialbgcolor Specify the background  color  that  will  be
+                active  on startup.  Give a number that iden-
+                tifies the  color  by  its  position  in  the
+                BgColor  menu  starting  from 1 for the first
+                entry.
+
+ bgcolori       Define a custom color  to  use  for  the  ith
+                entry  in  the  BgColor menu.  The same rules
+                apply to background colors as  to  foreground
+                colors.
+</pre></div>
+</div>
+<p>WEB PAGE
+http://www.vectaport.com/ivtools/idraw.html</p>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Duke, Yale and the Blue Brain Project.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
